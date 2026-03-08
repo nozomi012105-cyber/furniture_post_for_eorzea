@@ -197,20 +197,27 @@
             const card = document.createElement('div');
             card.className = 'cheki-card';
             
-            // 画像パスの作成（GitHubのimagesフォルダ内を参照）
+            // 1. まずIDを取得
             const itemId = item['アイテムID'];
-            const fImg = `images/${item.id}_front.png`;
-            const bImg = `images/${item.id}_back.png`;
-            const bImg = `images/${item.id}_side.png`;
-            const bImg = `images/${item.id}_bottom.png`;
-            const bImg = `images/${item.id}_top.png`;
 
-        card.innerHTML = `
-            <div class="photo-area" onclick="openModal(${index})">
-                <img src="${fImg}" class="slide-img active" id="f-${index}" onerror="this.src='https://placehold.jp/24/cccccc/ffffff/200x200.png?text=No%20Image'">
-                <img src="${bImg}" class="slide-img" id="b-${index}" onerror="this.style.display='none'">
-            </div>
-            <p class="item-name" onclick="openModal(${index})">${item['アイテム名（日）'] || item.name}</p>
+            // 2. それぞれに違う変数名をつける（fImg, bImg, sImg...）
+            const fImg = `images/${itemId}_front.png`;
+            const bImg = `images/${itemId}_back.png`;
+            const sImg = `images/${itemId}_side.png`;
+            const btImg = `images/${itemId}_bottom.png`;
+            const tImg = `images/${itemId}_top.png`;
+
+            // 今は「正面」と「背面（あるいは底面）」の2枚スライドにする設定です
+            card.innerHTML = `
+                <div class="photo-area" onclick="openModal(${index})">
+                    <img src="${fImg}" class="slide-img active" id="f-${index}" onerror="this.src='https://placehold.jp/24/cccccc/ffffff/200x200.png?text=No%20Image'">
+                    <img src="${btImg}" class="slide-img" id="b-${index}" onerror="this.style.display='none'">
+                </div>
+                <div class="slider-controls">
+                    <button class="slide-btn" onclick="event.stopPropagation(); changeImg(${index}, 'f')">Front</button>
+                    <button class="slide-btn" onclick="event.stopPropagation(); changeImg(${index}, 'b')">Bottom</button>
+                </div>
+                <p class="item-name" onclick="openModal(${index})">${item['アイテム名（日）'] || item.name}</p>
             `;
             grid.appendChild(card);
         });
@@ -228,13 +235,20 @@
             }
         }
     }
-
+        
     function openModal(index) {
         const item = displayList[index];
-        document.getElementById('modalTitle').innerText = item.name;
+        const itemId = item['アイテムID']; // IDを取得
+        
+        document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
         document.getElementById('modalCategory').innerText = item.category;
         document.getElementById('modalComment').innerText = item.remarks || "備考なし";
-        document.getElementById('modalPhoto').innerHTML = `<img src="images/${item.name}_front.jpg" style="max-width:100%; max-height:100%;" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
+        
+        // 画像をID版に変更！
+        document.getElementById('modalPhoto').innerHTML = `
+            <img src="images/${itemId}_front.png" style="max-width:100%; max-height:100%;" 
+                 onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
+        `;
         document.getElementById('itemModal').classList.add('visible');
     }
 
@@ -242,6 +256,7 @@
 </script>
 </body>
 </html>
+
 
 
 
