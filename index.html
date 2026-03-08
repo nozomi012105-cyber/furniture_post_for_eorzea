@@ -198,6 +198,7 @@
             card.className = 'cheki-card';
             
             // 画像パスの作成（GitHubのimagesフォルダ内を参照）
+            const itemId = item['アイテムID'];
             const fImg = `images/${item.id}_front.png`;
             const bImg = `images/${item.id}_back.png`;
             const bImg = `images/${item.id}_side.png`;
@@ -213,7 +214,7 @@
                 <button class="slide-btn" onclick="changeImg(${index}, 'f')">Front</button>
                 <button class="slide-btn" onclick="changeImg(${index}, 'b')">Back</button>
             </div>
-            <p class="item-name" onclick="openModal(${index})">${item.name}</p>
+            <p class="item-name" onclick="openModal(${index})">${item['アイテム名（日）'] || item.name}</p>
             `;
             grid.appendChild(card);
         });
@@ -245,4 +246,5 @@
 </script>
 </body>
 </html>
+
 
