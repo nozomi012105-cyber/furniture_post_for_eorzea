@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Furniture Post for Eorzea</title>
     <style>
-        /* --- 1. スタイル継承 & スライド用追加 --- */
         :root {
             --bg-color: #f0e1bd;
             --card-bg: #f5f5f5;
@@ -29,7 +28,7 @@
             scroll-behavior: smooth;
         }
 
-        /* --- ヘッダー・検索 --- */
+        /* --- ヘッダー・コントロール --- */
         header {
             position: fixed; top: 0; left: 0; width: 100%;
             background-color: rgba(240, 225, 189, 0.96);
@@ -38,6 +37,7 @@
             text-align: center;
         }
         header h1 { font-size: 1.1rem; color: var(--text-accent); margin: 0 0 8px 0; letter-spacing: 1px; }
+        
         .top-controls { display: flex; align-items: center; gap: 8px; max-width: 500px; margin: 0 auto 10px; }
         .search-input {
             width: 100%; padding: 8px 15px; border-radius: 20px;
@@ -45,46 +45,27 @@
             outline: none; font-size: 17px; transition: 0.3s;
         }
 
-        /* --- スライダー用スタイル --- */
-        .photo-area { 
-            position: relative; 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            background-color: #ddd; 
-            border-radius: 6px; 
-            overflow: hidden; 
-            margin-bottom: 8px; 
+        /* パッチ切り替えトグル */
+        .smooth-toggle {
+            width: 185px; height: 32px; background-color: rgba(125, 107, 93, 0.15);
+            border-radius: 16px; position: relative; cursor: pointer; user-select: none;
+            display: flex; align-items: center; border: 1px solid rgba(125, 107, 93, 0.05);
         }
-        .slide-img {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .toggle-slider {
+            position: absolute; top: 1px; left: 2px; width: 63px; height: 28px;
+            background-color: #ffffff; border-radius: 14px;
+            box-shadow: 0 2px 6px rgba(90, 70, 50, 0.1);
+            transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1); z-index: 1;
         }
-        .slide-img.active {
-            opacity: 1;
-        }
-        .slider-controls {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 8px;
-        }
-        .slide-btn {
-            background: rgba(125, 107, 93, 0.1);
-            border: 1px solid rgba(125, 107, 93, 0.2);
-            border-radius: 4px;
-            font-size: 10px;
-            color: var(--text-accent);
-            cursor: pointer;
-            padding: 2px 8px;
-            transition: 0.2s;
-        }
-        .slide-btn:hover { background: var(--text-accent); color: white; }
+        .mode-patch .toggle-slider { transform: translateX(118px); }
+        .toggle-label { flex: 1; font-size: 0.65rem; font-weight: bold; color: var(--text-accent); z-index: 2; pointer-events: none; }
 
-        /* --- その他既存スタイル --- */
+        /* --- カテゴリフィルター --- */
+        .filter-scroll { display: flex; overflow-x: auto; gap: 8px; padding: 5px 0; justify-content: center; }
+        .filter-chip { padding: 6px 14px; background: rgba(125,107,93,0.18); border-radius: 15px; font-size: 0.7rem; cursor: pointer; border: none; font-weight: bold; color: var(--text-accent); }
+        .filter-chip.active { background: var(--text-accent); color: white; }
+
+        /* --- グリッド・カード --- */
         .catalog-container { max-width: 1100px; margin: 0 auto; padding: 15px; }
         .catalog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         @media (min-width: 600px) {
@@ -99,38 +80,49 @@
             animation: cardArrive 0.6s ease forwards;
         }
         .cheki-card:hover { transform: translateY(-5px); background-color: var(--card-hover-bg); }
-        .item-name { font-size: 0.8rem; font-weight: 600; text-align: center; color: var(--text-accent); margin: 0; cursor: pointer; }
+
+        /* スライダー画像 */
+        .photo-area { position: relative; width: 100%; aspect-ratio: 1/1; background-color: #ddd; border-radius: 6px; overflow: hidden; margin-bottom: 8px; cursor: pointer; }
+        .slide-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s ease; }
+        .slide-img.active { opacity: 1; }
         
-        /* モーダル関連 */
-        .modal {
-            display: none; position: fixed; z-index: 2000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-            align-items: center; justify-content: center;
-        }
+        .slider-controls { display: flex; justify-content: center; gap: 4px; margin-bottom: 8px; }
+        .slide-btn { background: rgba(125,107,93,0.1); border: 1px solid rgba(125,107,93,0.2); border-radius: 4px; font-size: 10px; color: var(--text-accent); cursor: pointer; padding: 2px 8px; }
+        .slide-btn:hover { background: var(--text-accent); color: white; }
+
+        .item-name { font-size: 0.8rem; font-weight: 600; text-align: center; color: var(--text-accent); margin: 0; }
+
+        /* パッチ区切り線 */
+        .patch-divider { grid-column: 1 / -1; display: flex; align-items: center; margin: 30px 0 10px 0; }
+        .patch-label { font-size: 0.75rem; font-weight: bold; color: var(--text-accent); background: rgba(255,255,255,0.5); padding: 3px 12px; border-radius: 12px; border: 1.5px dashed var(--text-accent); }
+
+        /* TOPに戻るボタン */
+        .back-to-top { position: fixed; bottom: 25px; right: 25px; width: 48px; height: 48px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(90, 70, 50, 0.2); z-index: 1001; opacity: 0; pointer-events: none; transition: 0.3s; text-decoration: none; }
+        .back-to-top.visible { opacity: 1; pointer-events: auto; }
+        .arrow-icon { width: 14px; height: 14px; border-top: 4px solid var(--text-accent); border-left: 4px solid var(--text-accent); transform: rotate(45deg) translate(2px, 2px); }
+
+        /* モーダル（ブックレイアウト） */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
         .modal.visible { display: flex; }
-        .book-layout {
-            display: flex; width: 95%; max-width: 850px; height: 500px;
-            background: #fdfaf3; border-radius: 10px; overflow: hidden; position: relative;
-        }
+        .book-layout { display: flex; width: 95%; max-width: 850px; height: 500px; background: #fdfaf3; border-radius: 10px; overflow: hidden; position: relative; }
         .book-left { flex: 1.2; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
-        .book-right { flex: 1; padding: 30px; border-left: 1px solid rgba(125,107,93,0.2); overflow-y: auto;}
-        .close-modal { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #555; }
+        .book-right { flex: 1; padding: 30px; border-left: 1px solid rgba(125,107,93,0.2); overflow-y: auto; color: var(--text-main); }
+        .close-modal { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #555; z-index: 10; }
 
         @keyframes cardArrive { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* フィルター等のスタイル（省略せず継承） */
-        .filter-scroll { display: flex; overflow-x: auto; gap: 8px; padding: 5px 0; justify-content: center; }
-        .filter-chip { padding: 6px 14px; background: rgba(125,107,93,0.18); border-radius: 15px; font-size: 0.7rem; cursor: pointer; border: none; }
-        .filter-chip.active { background: var(--text-accent); color: white; }
     </style>
 </head>
-<body>
+<body class="mode-all">
 
     <header>
         <h1>Furniture Post</h1>
         <div class="top-controls">
             <input type="text" id="searchInput" class="search-input" placeholder="家具を検索..." oninput="render()">
+            <div class="smooth-toggle" id="modeToggle" onclick="toggleMode()">
+                <div class="toggle-slider"></div>
+                <div class="toggle-label">新着順</div>
+                <div class="toggle-label">パッチ別</div>
+            </div>
         </div>
         <div class="filter-scroll" id="mainCategoryArea"></div>
     </header>
@@ -144,38 +136,52 @@
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <div class="book-left" id="modalPhoto"></div>
             <div class="book-right">
-                <h2 id="modalTitle">アイテム名</h2>
-                <p id="modalCategory"></p>
-                <div id="modalComment" style="font-size: 0.9rem; color: #666;"></div>
+                <h2 id="modalTitle" style="margin-top:0;"></h2>
+                <p id="modalCategory" style="font-weight:bold; color:var(--text-accent);"></p>
+                <hr style="border:0; border-top:1px dotted #ccc; margin:15px 0;">
+                <div id="modalComment" style="font-size: 0.9rem; line-height:1.6;"></div>
             </div>
         </div>
     </div>
 
+    <a href="#" class="back-to-top" id="topBtn" onclick="scrollToTop(event)">
+        <span class="arrow-icon"></span>
+    </a>
+
 <script>
     let sampleData = [];      
     let displayList = [];
+    let currentCat = 'all';
+    let currentMode = 'all'; // 'all' (新着順) or 'patch' (パッチ別)
+
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxW6Gx_zg8upPU10cK2gS9acqg_YRdc79lUzq2qUB0DsMJv0hV2OkCcttbIHoa1AqSemw/exec";
 
     window.onload = function() {
         fetch(GAS_URL)
             .then(response => response.json())
             .then(data => {
+                // スプシの並びを新着順（逆順）にして保持
                 sampleData = data.reverse(); 
                 createFilterButtons();
                 render(); 
             });
     };
 
+    function toggleMode() {
+        currentMode = (currentMode === 'all') ? 'patch' : 'all';
+        document.body.className = 'mode-' + currentMode;
+        render();
+    }
+
     function createFilterButtons() {
         const area = document.getElementById('mainCategoryArea');
-        const categories = [...new Set(sampleData.map(item => item.category))].filter(c => c && c !== "‐");
+        const categories = [...new Set(sampleData.map(item => item.category))].filter(c => c && c !== "‐" && c !== "×");
         area.innerHTML = '<button class="filter-chip active" onclick="filterCat(\'all\', this)">すべて</button>';
         categories.forEach(cat => {
             area.innerHTML += `<button class="filter-chip" onclick="filterCat('${cat}', this)">${cat}</button>`;
         });
     }
 
-    let currentCat = 'all';
     function filterCat(cat, el) {
         currentCat = cat;
         document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
@@ -187,40 +193,48 @@
         const grid = document.getElementById('grid');
         const search = document.getElementById('searchInput').value.toLowerCase();
         grid.innerHTML = '';
+        let lastPatch = "";
 
+        // フィルタリング
         displayList = sampleData.filter(item => {
-            return (currentCat === 'all' || item.category === currentCat) && 
-                   (item.name || "").toLowerCase().includes(search);
+            const categoryMatch = (currentCat === 'all' || item.category === currentCat);
+            const nameMatch = (item['アイテム名（日）'] || item.name || "").toLowerCase().includes(search);
+            return categoryMatch && nameMatch;
         });
 
+        // 表示
         displayList.forEach((item, index) => {
+            // パッチ別モード時の仕切り
+            if (currentMode === 'patch' && item.patch !== lastPatch) {
+                const divider = document.createElement('div');
+                divider.className = 'patch-divider';
+                divider.innerHTML = `<span class="patch-label">Patch ${item.patch}</span>`;
+                grid.appendChild(divider);
+                lastPatch = item.patch;
+            }
+
             const card = document.createElement('div');
             card.className = 'cheki-card';
             
-            // 1. まずIDを取得
             const itemId = item['アイテムID'];
-
-            // 2. それぞれに違う変数名をつける（fImg, bImg, sImg...）
             const fImg = `images/${itemId}_front.png`;
-            const bImg = `images/${itemId}_back.png`;
-            const sImg = `images/${itemId}_side.png`;
-            const btImg = `images/${itemId}_bottom.png`;
-            const tImg = `images/${itemId}_top.png`;
+            const bImg = `images/${itemId}_bottom.png`; // 背面/底面用
 
-            // 今は「正面」と「背面（あるいは底面）」の2枚スライドにする設定です
             card.innerHTML = `
                 <div class="photo-area" onclick="openModal(${index})">
                     <img src="${fImg}" class="slide-img active" id="f-${index}" onerror="this.src='https://placehold.jp/24/cccccc/ffffff/200x200.png?text=No%20Image'">
-                    <img src="${btImg}" class="slide-img" id="b-${index}" onerror="this.style.display='none'">
+                    <img src="${bImg}" class="slide-img" id="b-${index}" onerror="this.style.display='none'">
                 </div>
-
+                <div class="slider-controls">
+                    <button class="slide-btn" onclick="event.stopPropagation(); changeImg(${index}, 'f')">Front</button>
+                    <button class="slide-btn" onclick="event.stopPropagation(); changeImg(${index}, 'b')">Bottom</button>
+                </div>
                 <p class="item-name" onclick="openModal(${index})">${item['アイテム名（日）'] || item.name}</p>
             `;
             grid.appendChild(card);
         });
     }
 
-    // スライド切り替え魔法
     function changeImg(idx, side) {
         const f = document.getElementById(`f-${idx}`);
         const b = document.getElementById(`b-${idx}`);
@@ -232,36 +246,37 @@
             }
         }
     }
-        
+
     function openModal(index) {
         const item = displayList[index];
-        const itemId = item['アイテムID']; // IDを取得
-        
-        document.getElementById('modalTitle').innerText = item.name || "-";
-        document.getElementById('modalPatch').innerText = "Patch " + (item.patch || "-");
-        document.getElementById('modalCategory').innerText = item.category || "-";
-        document.getElementById('modalGenre').innerText = item.genre || "-";
-        document.getElementById('modalDye').innerText = item.dyeable || "不可";
-        document.getElementById('modalMarket').innerText = item.market || "不可";
-        document.getElementById('modalRecipe').innerText = "レシピ詳細：" + (item.recipe || "なし");
-        document.getElementById('modalMaterial').innerText = "材質：" + (item.material || "-");
+        const itemId = item['アイテムID'];
+        document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
+        document.getElementById('modalCategory').innerText = item.category + " / " + (item.genre || "");
         document.getElementById('modalComment').innerText = item.remarks || "備考なし";
-        
-        // 画像をID版に変更！
-        document.getElementById('modalPhoto').innerHTML = `
-            <img src="images/${itemId}_front.png" style="max-width:100%; max-height:100%;" 
-                 onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
-        `;
+        document.getElementById('modalPhoto').innerHTML = `<img src="images/${itemId}_front.png" style="max-width:100%; max-height:100%;" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
         document.getElementById('itemModal').classList.add('visible');
+        document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
+    function closeModal() {
+        document.getElementById('itemModal').classList.remove('visible');
+        document.body.style.overflow = 'auto';
+    }
+
+    // TOPへ戻る
+    function scrollToTop(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onscroll = function() {
+        const btn = document.getElementById('topBtn');
+        if (document.documentElement.scrollTop > 300) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    };
 </script>
 </body>
 </html>
-
-
-
-
-
-
