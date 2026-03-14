@@ -127,6 +127,7 @@
             align-items: center; 
             justify-content: center;
             margin-top: 50px; /* 【修正1】位置を下げるためのマージンを追加 */
+            transition: all 0.3s ease;
         }
         
         /* 【追加】複数画像があるとき（JavaScriptで付与） */
@@ -144,7 +145,12 @@
         
         /* サムネイルを並べるコンテナ */
         .thumb-nav {
-            display: flex; gap: 10px; margin-top: 15px; height: 60px; justify-content: center;
+            display: none; /* 最初は隠しておき、JSで枚数を確認してから表示させる */
+            gap: 10px; 
+            margin-top: 15px; 
+            height: 60px; 
+            justify-content: center;
+            width: 100%;   /* 横幅いっぱいに使う */
         }
         .thumb-nav img {
             width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 4px; border: 2px solid transparent; transition: 0.2s; opacity: 0.6;
@@ -436,6 +442,16 @@ async function openModalByIdx(originalIdx) {
         bookRight.classList.add('has-multiple-thumbs');
     }
 
+    // 5. 枚数に応じた表示の切り替え
+    if (foundCount > 1) {
+        // 2枚以上ある：クラスを付けて上に上げ、サムネイルを表示する
+        bookRight.classList.add('has-multiple-thumbs');
+        thumbNav.style.display = 'flex'; 
+    } else {
+        // 1枚のみ：サムネイルを非表示にする
+        thumbNav.style.display = 'none';
+    }
+    
     document.getElementById('itemModal').classList.add('visible');
 }
 
