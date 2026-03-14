@@ -389,9 +389,23 @@ async function openModalByIdx(originalIdx) {
     const item = allData[originalIdx];
     const itemId = item['ItemID'] || item['アイテムID'];
     
-    document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
+    // --- ここから書き換え ---
+    const titleEl = document.getElementById('modalTitle');
+    const itemName = item['アイテム名（日）'] || item.name;
+    titleEl.innerText = itemName;
+
+    // 文字数に応じてフォントサイズを自動調整（枠に合わせて小さくする）
+    if (itemName.length > 15) {
+        titleEl.style.fontSize = "1.2rem"; 
+    } else if (itemName.length > 10) {
+        titleEl.style.fontSize = "1.4rem"; 
+    } else {
+        titleEl.style.fontSize = "1.8rem"; 
+    }
+
     document.getElementById('modalCategory').innerText = `${item.category} / ${item['FF14サブカテゴリー'] || ''}`;
     document.getElementById('modalComment').innerText = item.remarks || "備考はありません。";
+    // --- ここまで ---
 
     const photoArea = document.getElementById('modalPhoto');
     const bookRight = document.querySelector('.book-right');
