@@ -100,7 +100,7 @@
         .slide-img.active { opacity: 1; }
         .slider-controls { display: flex; justify-content: center; gap: 4px; margin-bottom: 8px; }
         .slide-btn { background: rgba(0,0,0,0.05); border: none; border-radius: 4px; font-size: 9px; cursor: pointer; padding: 2px 6px; }
-        .item-name { font-size: 0.8rem; font-weight: bold; text-align: center; margin: 0; color: var(--primary-color); }
+        .item-name { font-size: 0.8rem; font-weight: bold; text-align: center; margin: 10px 0 0; color: var(--primary-color); }
         .patch-divider { grid-column: 1 / -1; margin-top: 30px; font-weight: bold; color: var(--primary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; }
 
         /* モーダル */
@@ -377,13 +377,11 @@
             card.className = 'cheki-card';
             card.innerHTML = `
                 <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
-                    <img src="images/${itemId}_front.png" class="slide-img active" id="f-${index}" onerror="this.src='https://placehold.jp/200x200.png?text=No%20Image'">
-                    <img src="images/${itemId}_bottom.png" class="slide-img" id="b-${index}" onerror="this.style.display='none'">
+                    <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
+                    <img src="images/${itemId}_front.png" class="slide-img active" onerror="this.src='https://placehold.jp/24/f0e1bd/7d6b5d/200x200.png?text=No%20Image'">
                 </div>
-                <div class="slider-controls">
-                    <button class="slide-btn" onclick="changeImg(${index}, 'f')">F</button>
-                    <button class="slide-btn" onclick="changeImg(${index}, 'b')">B</button>
                 </div>
+
                 <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
             `;
             grid.appendChild(card);
