@@ -218,7 +218,18 @@
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxW6Gx_zg8upPU10cK2gS9acqg_YRdc79lUzq2qUB0DsMJv0hV2OkCcttbIHoa1AqSemw/exec";
     
     const CATEGORY_ORDER = ["調度品(一般)", "調度品(台座)", "調度品(卓上)", "調度品(壁掛)", "調度品(敷物)", "内装建材", "庭具"];
-    const SUB_CATEGORY_ORDER = ["椅子・ベンチ", "テーブル", "照明", "植物", "敷物"];
+    const SUB_CATEGORY_ORDER = [
+        "机", "椅子/ソファ", "棚/チェスト", "ベッド",
+        "照明", "時計", "料理", "植物",
+        "風呂",
+        "壁/柱/仕切り",
+        "ぬいぐるみ/マスコット", "置物",
+        "旗/額縁/ポスター", "窓",
+        "足場", "水場",
+        "機能家具",
+        "その他"
+        
+    ];
 
     let allData = [];
     let currentFilter = { type: 'all', value: 'all', subValue: 'all' };
@@ -362,59 +373,67 @@
         });
     }
 
-    // --- ギャラリー付きモーダル生成ロジックの追加 ---
-    function openModalByIdx(originalIdx) {
-        const item = allData[originalIdx];
-        const itemId = item['ItemID'] || item['アイテムID'];
-        
-        document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
-        document.getElementById('modalCategory').innerText = `${item.category} / ${item['FF14サブカテゴリー'] || ''}`;
-        document.getElementById('modalComment').innerText = item.remarks || "備考はありません。";
+    async function openModalByIdx(originalIdx) {
+    const item = allData[originalIdx];
+    const itemId = item['ItemID'] || item['アイテムID'];
+    
+    document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
+    document.getElementById('modalCategory').innerText = `${item.category} / ${item['FF14サブカテゴリー'] || ''}`;
+    document.getElementById('modalComment').innerText = item.remarks || "備考はありません。";
 
-        // 【追加】ギャラリー機能の実装
-        // 1. メイン画像を表示
-        const photoArea = document.getElementById('modalPhoto');
-        photoArea.innerHTML = `<img src="images/${itemId}_front.png" id="mainModalImg" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
+    const photoArea = document.getElementById('modalPhoto');
+    // メイン画像は確実に存在する front をまず表示
+    photoArea.innerHTML = `<img src="images/${itemId}_front.png" id="mainModalImg" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
 
-        // 2. サムネイルエリアの作成（既にある場合は削除して再作成）
-        let thumbNav = document.querySelector('.thumb-nav');
-        if (!thumbNav) {
-            thumbNav = document.createElement('div');
-            thumbNav.className = 'thumb-nav';
-            document.querySelector('.book-right').appendChild(thumbNav); // book-rightに追加
-        }
-        thumbNav.innerHTML = ''; // 一旦クリア
+    let thumbNav = document.querySelector('.thumb-nav');
+    if (!thumbNav) {
+        thumbNav = document.createElement('div');
+        thumbNav.className = 'thumb-nav';
+        document.querySelector('.book-right').appendChild(thumbNav);
+    }
+    thumbNav.innerHTML = ''; // 一旦クリア
 
-        // 3. サムネイル画像リスト（front と bottom）
-        const images = [
-            { id: 'front', url: `images/${itemId}_front.png` },
-            { id: 'bottom', url: `images/${itemId}_bottom.png` }
-        ];
+    // チェックしたい画像パターンのリスト
+    const suffixList = ['front', 'side', 'back', 'bottom', 'top', 'dye']; // 'dye' は染色用など任意
 
-        // 4. サムネイルを動的に生成
-        images.forEach((imgData, i) => {
-            const tImg = document.createElement('img');
-            tImg.src = imgData.url;
-            tImg.alt = imgData.id;
-            if (i === 0) tImg.className = 'active'; // 1枚目を初期選択に
+    // 画像の存在確認を行ってサムネイルを追加する関数
+    const checkAndAddThumbnail = (suffix) => {
+        return new Promise((resolve) => {
+            const imgUrl = `images/${itemId}_${suffix}.png`;
+            const tempImg = new Image();
+            
+            tempImg.onload = () => {
+                // 読み込みに成功したらサムネイルを作成
+                const tImg = document.createElement('img');
+                tImg.src = imgUrl;
+                tImg.alt = suffix;
+                if (suffix === 'front') tImg.className = 'active';
 
-            // サムネイルクリック時の処理
-            tImg.onclick = () => {
-                // メイン画像を切り替え
-                document.getElementById('mainModalImg').src = imgData.url;
-                // サムネイルの選択状態（枠線）を更新
-                document.querySelectorAll('.thumb-nav img').forEach(el => el.classList.remove('active'));
-                tImg.classList.add('active');
+                tImg.onclick = () => {
+                    document.getElementById('mainModalImg').src = imgUrl;
+                    document.querySelectorAll('.thumb-nav img').forEach(el => el.classList.remove('active'));
+                    tImg.classList.add('active');
+                };
+                thumbNav.appendChild(tImg);
+                resolve();
             };
 
-            // 画像が存在しない場合はサムネイル自体を表示しない（任意）
-            // tImg.onerror = () => tImg.style.display = 'none';
-            
-            thumbNav.appendChild(tImg);
-        });
+            tempImg.onerror = () => {
+                // 読み込みに失敗（画像がない）場合は何もしない
+                resolve();
+            };
 
-        document.getElementById('itemModal').classList.add('visible');
+            tempImg.src = imgUrl;
+        });
+    };
+
+    // すべてのパターンを順番にチェック
+    for (const suffix of suffixList) {
+        await checkAndAddThumbnail(suffix);
     }
+
+    document.getElementById('itemModal').classList.add('visible');
+}
 
     function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
 </script>
