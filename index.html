@@ -423,6 +423,7 @@
             allData = JSON.parse(cachedData);
             buildMenu();
             buildHome();
+            render(); // ← これを追加！初期状態（全件表示）のリストを生成します
             console.log("キャッシュからデータを爆速で読み込みました！");
         } 
         
@@ -751,6 +752,20 @@ async function openModalByIdx(originalIdx) {
         // 下から300pxの位置に来たら読み込み開始
         if (scrollTop + clientHeight >= scrollHeight - 300) {
             loadMoreItems();
+        }
+    });
+
+    // キーボード操作の追加
+    document.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('itemModal');
+        if (!modal.classList.contains('visible')) return; // モーダルが開いていない時は無視
+    
+        if (e.key === 'ArrowLeft') {
+            changeModalItem(-1); // ←キーで前へ
+        } else if (e.key === 'ArrowRight') {
+            changeModalItem(1);  // →キーで次へ
+        } else if (e.key === 'Escape') {
+            closeModal();        // Escキーで閉じる
         }
     });
     
