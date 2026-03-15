@@ -268,11 +268,43 @@
     let isLoading = false;     // 重複読み込み防止
 
     window.onload = async function() {
-        const response = await fetch(GAS_URL);
-        const data = await response.json();
-        allData = data.reverse(); 
-        buildMenu();
-        buildHome();
+        showHome(); // まずHomeを表示
+
+        const CACHE_KEY = 'eorzea_furniture_data';
+        const CACHE_TIME_KEY = 'eorzea_furniture_timestamp';
+        const CACHE_EXPIRE = 1000 * 60 * 60 * 24; // 24時間（お好みで調整）
+
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+        const now = new Date().getTime();
+
+        // キャッシュがあって、かつ期限内（24時間以内）ならそれを使う
+        if (cachedData && cachedTime && (now - cachedTime < CACHE_EXPIRE)) {
+            allData = JSON.parse(cachedData);
+            buildMenu();
+            buildHome();
+            console.log("キャッシュからデータを爆速で読み込みました！");
+        } 
+        
+        // キャッシュがない、または期限切れならGASから取得
+        // （あるいは期限内でも裏でコッソリ最新に更新する「バックグラウンド更新」もアリ）
+        if (!allData.length || (now - cachedTime >= CACHE_EXPIRE)) {
+            try {
+                const response = await fetch(GAS_URL);
+                const data = await response.json();
+                allData = data.reverse();
+                
+                // 新しいデータをキャッシュに保存
+                localStorage.setItem(CACHE_KEY, JSON.stringify(allData));
+                localStorage.setItem(CACHE_TIME_KEY, now.toString());
+                
+                buildMenu();
+                buildHome();
+                console.log("最新データをGASから取得して保存しました。");
+            } catch (e) {
+                console.error("データの取得に失敗しました", e);
+            }
+        }
     };
 
     function formatPatch(p) {
