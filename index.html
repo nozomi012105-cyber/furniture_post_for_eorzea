@@ -231,6 +231,18 @@
             white-space: pre-wrap; /* これを追加すると、スプレッドシート内の改行が反映されます */
         }
 
+        .modal-divider {
+            border: none;
+            height: 1px;
+            /* 背景を線にすることで、点線の間隔を細かく調整できます */
+            background-image: linear-gradient(to right, #ccc 50%, rgba(255,255,255,0) 0%);
+            background-position: bottom;
+            background-size: 4px 1px; /* 8pxが「点＋空白」の長さ。ここを変えると間隔が変わります */
+            background-repeat: repeat-x;
+            margin: 25px auto;
+            width: 80%; /* 線を少し短くして中央に寄せると、より「本の装飾」っぽくなります */
+        }
+
         @media (max-width: 768px) {
             #sidebar { display: none; }
             .sticky-header { padding: 15px 20px 5px; }
@@ -296,7 +308,7 @@
             <span id="modalSubCategory" class="tag-badge"></span>
         </div>
 
-        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+        <hr class="modal-divider">
 
         <div class="status-grid">
             <div class="status-item"><span>染色</span><span id="modalDye"></span></div>
