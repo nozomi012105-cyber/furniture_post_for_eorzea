@@ -122,8 +122,8 @@
             transform: translateY(-50%);
             width: 50px;
             height: 50px;
-            background: rgba(125, 107, 93, 0.2);
-            color: var(--primary-color);
+            background: rgba(125, 107, 93, 0.5); /* 少し濃くして見やすく */
+            color: white; /* 矢印の色を白に */
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -131,14 +131,20 @@
             cursor: pointer;
             transition: 0.3s;
             font-size: 1.5rem;
-            z-index: 3000;
+            z-index: 4000; /* book-layout(3000)より大きく */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* 境界線をつけて見やすく */
         }
+        
         .modal-nav:hover {
-            background: rgba(125, 107, 93, 0.5);
-            color: white;
+            background: var(--primary-color);
+            transform: translateY(-50%) scale(1.1); /* ホバーで少し大きく */
         }
-        .nav-prev { left: -70px; } /* モーダルの外側に配置 */
-        .nav-next { right: -70px; }
+        .nav-prev { 
+            left: 20px;   /* 外側(-70px)から内側(20px)へ */
+        } 
+        .nav-next { 
+            right: 20px;  /* 外側(-70px)から内側(20px)へ */
+        }
         
         /* スマホだと外側は見えないので調整 */
         @media (max-width: 1200px) {
