@@ -256,14 +256,13 @@
             <div id="modalPhoto"></div>
         </div>
         <div class="book-left">
-        <h2 id="modalTitle" style="margin-top:0; color:var(--primary-color); margin-bottom: 10px;"></h2>
-        
-        <div id="modalCategoryArea" style="margin-bottom: 20px; display: flex; gap: 5px;">
-            <span id="modalMainCategory" class="tag-badge"></span>
-            <span id="modalSubCategory" class="tag-badge"></span>
-        </div>
-    </div>
-</div>
+            <h2 id="modalTitle" style="margin-top:0; color:var(--primary-color); margin-bottom: 10px;"></h2>
+            <div id="modalCategoryArea" style="margin-bottom: 20px; display: flex; gap: 5px;">
+                <span id="modalMainCategory" class="tag-badge"></span>
+                <span id="modalSubCategory" class="tag-badge"></span>
+            </div>
+            <p id="modalRemarks" style="font-size: 0.9rem; line-height: 1.6; color: #666;"></p>
+        </div> </div> </div>
 
 <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxW6Gx_zg8upPU10cK2gS9acqg_YRdc79lUzq2qUB0DsMJv0hV2OkCcttbIHoa1AqSemw/exec";
@@ -518,12 +517,11 @@ async function openModalByIdx(originalIdx) {
         titleEl.style.fontSize = "1.8rem"; 
     }
 
-    document.getElementById('modalCategory').innerText = `${item.category} / ${item['FF14サブカテゴリー'] || ''}`;
-    document.getElementById('modalComment').innerText = item.remarks || "備考はありません。";
-    // --- ここまで ---
-
     const photoArea = document.getElementById('modalPhoto');
     const bookRight = document.querySelector('.book-right');
+
+    // openModalByIdx 関数の中に追加
+    document.getElementById('modalRemarks').innerText = item.remarks || "備考はありません。";
 
     // 1. 初期化：複数枚用クラスを一旦消し、メイン画像をfrontに設定
     bookRight.classList.remove('has-multiple-thumbs');
@@ -593,6 +591,7 @@ async function openModalByIdx(originalIdx) {
     }
     
     document.getElementById('itemModal').classList.add('visible');
+    
 }
 
     function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
