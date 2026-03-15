@@ -299,6 +299,36 @@
             .content-body { padding: 20px; }
             .book-layout { flex-direction: column; height: auto; max-height: 90vh; }
         }
+
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0; /* 最初は隠す */
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1500;
+        }
+        
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #backToTop:hover {
+            transform: translateY(-5px);
+            background-color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
@@ -774,7 +804,30 @@ async function openModalByIdx(originalIdx) {
             closeModal();        // Escキーで閉じる
         }
     });
+
+    // スクロールを監視
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('backToTop');
+        if (window.scrollY > 500) { // 500px以上スクロールしたら表示
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+    });
+    
+    // TOPへスムーズに移動
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // ぬるっと戻る
+        });
+    }
     
 </script>
+
+    <div id="backToTop" onclick="scrollToTop()">
+        <i class="fa-solid fa-chevron-up"></i>
+    </div>
+        
 </body>
 </html>
