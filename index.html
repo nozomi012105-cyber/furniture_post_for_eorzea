@@ -197,6 +197,38 @@
 
         .book-left { flex: 1; padding: 40px; overflow-y: auto; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; }
+        
+        /* ステータス部分の点線デザイン */
+        .status-grid {
+            margin: 0 auto 30px; /* 上下0、左右autoで中央寄せ */
+            max-width: 400px;     /* ここでお好みの幅にギュッと狭めます（お好みで200〜280pxくらい） */
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #ccc;
+            padding: 10px 10px;
+            font-size: 1rem;
+            color: #555;
+        }
+        .status-item span:last-child {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 🌸入手方法・備考🌸 タイトル */
+        .section-title {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            margin: 20px 0 10px;
+        }
+        .section-content {
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #555;
+        }
 
         @media (max-width: 768px) {
             #sidebar { display: none; }
@@ -249,20 +281,40 @@
     </div>
 </main>
 
-<div id="itemModal" class="modal" onclick="closeModal()">
-    <div class="book-layout" onclick="event.stopPropagation()">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <div class="book-right">
-            <div id="modalPhoto"></div>
-        </div>
-        <div class="book-left">
-            <h2 id="modalTitle" style="margin-top:0; color:var(--primary-color); margin-bottom: 10px;"></h2>
-            <div id="modalCategoryArea" style="margin-bottom: 20px; display: flex; gap: 5px;">
-                <span id="modalMainCategory" class="tag-badge"></span>
-                <span id="modalSubCategory" class="tag-badge"></span>
+    <div id="itemModal" class="modal" onclick="closeModal()">
+        <div class="book-layout" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="book-right">
+                <div id="modalPhoto"></div>
             </div>
-            <p id="modalRemarks" style="font-size: 0.9rem; line-height: 1.6; color: #666;"></p>
-        </div> </div> </div>
+            <div class="book-left">
+        <h2 id="modalTitle" style="margin-top:0; color:var(--primary-color);"></h2>
+
+        <div id="modalCategoryArea" style="margin-bottom: 20px; display: flex; gap: 5px;">
+            <span id="modalMainCategory" class="tag-badge"></span>
+            <span id="modalSubCategory" class="tag-badge"></span>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+
+        <div class="status-grid">
+            <div class="status-item"><span>染色</span><span id="modalDye"></span></div>
+            <div class="status-item"><span>マケボ取引</span><span id="modalMarket"></span></div>
+            <div class="status-item"><span>製作</span><span id="modalCraft"></span></div>
+        </div>
+
+        <div class="info-section">
+            <h3 class="section-title">🌸 入手方法 🌸</h3>
+            <div id="modalHowToGet" class="section-content"></div>
+        </div>
+
+        <hr style="border:0; border-top:1px dashed #ccc; margin:20px 0;">
+
+        <div class="info-section">
+            <h3 class="section-title">🌸 備考 🌸</h3>
+            <div id="modalComment" class="section-content"></div>
+        </div>
+    </div> </div> </div>
 
 <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxW6Gx_zg8upPU10cK2gS9acqg_YRdc79lUzq2qUB0DsMJv0hV2OkCcttbIHoa1AqSemw/exec";
@@ -491,6 +543,9 @@
 async function openModalByIdx(originalIdx) {
     const item = allData[originalIdx];
     const itemId = item['ItemID'] || item['アイテムID'];
+    
+// 基本情報
+    document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
 
     // --- openModalByIdx 内のタグ設定部分 ---
     const mainBadge = document.getElementById('modalMainCategory');
@@ -520,8 +575,15 @@ async function openModalByIdx(originalIdx) {
     const photoArea = document.getElementById('modalPhoto');
     const bookRight = document.querySelector('.book-right');
 
-    // openModalByIdx 関数の中に追加
-    document.getElementById('modalRemarks').innerText = item.remarks || "備考はありません。";
+    // --- ステータス情報の流し込み ---
+    // ※スプレッドシートの列名に合わせて ['〇〇'] の中身を変えてください
+    document.getElementById('modalDye').innerText = item['染色'] || "不可";
+    document.getElementById('modalMarket').innerText = item['マケボ'] || "不可";
+    document.getElementById('modalCraft').innerText = item['製作'] || "-";
+
+    // 入手方法と備考
+    document.getElementById('modalHowToGet').innerText = item['入手方法'] || "確認中";
+    document.getElementById('modalComment').innerText = item.remarks || "特になし";
 
     // 1. 初期化：複数枚用クラスを一旦消し、メイン画像をfrontに設定
     bookRight.classList.remove('has-multiple-thumbs');
