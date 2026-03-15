@@ -115,6 +115,33 @@
             border-radius: 12px;
             overflow: hidden; position: relative;
         }
+
+        .tag-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 15px 4px 28px; /* 左側の穴の分、余白を広く */
+            color: white;
+            font-size: 0.75rem;
+            position: relative;
+        
+            /* --- 【ここがポイント！】画像をマスクとして使う --- */
+            -webkit-mask-image: url('images/tag-bg.png'); /* フォルダ内の画像を指定 */
+            mask-image: url('images/tag-bg.png');
+            
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+        
+            /* 背景色はJavaScriptから設定される色になります */
+            background-color: #7d6b5d; 
+            
+            /* 影を付けて浮き上がらせる */
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.15));
+            
+            margin-right: 8px;
+        }
+        
         
         /* 右側（画像エリア）の修正 */
         .book-right {
@@ -468,8 +495,19 @@
 async function openModalByIdx(originalIdx) {
     const item = allData[originalIdx];
     const itemId = item['ItemID'] || item['アイテムID'];
+
+    // --- openModalByIdx 内のタグ設定部分 ---
+    const mainBadge = document.getElementById('modalMainCategory');
+    const subBadge = document.getElementById('modalSubCategory');
+
+    mainBadge.innerText = item.category || "";
+    mainBadge.style.backgroundColor = "#6670b0"; // 
+
+    subBadge.innerText = item['FF14サブカテゴリー'] || "";
+    subBadge.style.backgroundColor = "#7f3030"; // 
+    subBadge.style.display = subBadge.innerText ? "inline-flex" : "none";
     
-    // --- ここから書き換え ---
+    
     const titleEl = document.getElementById('modalTitle');
     const itemName = item['アイテム名（日）'] || item.name;
     titleEl.innerText = itemName;
