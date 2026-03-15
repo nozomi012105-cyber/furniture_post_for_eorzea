@@ -584,7 +584,7 @@ async function openModalByIdx(originalIdx) {
 
     // 入手方法と備考
     document.getElementById('modalHowToGet').innerText = item['入手方法'] || "確認中";
-    document.getElementById('modalComment').innerText = item.remarks || "特になし";
+    document.getElementById('modalComment').innerText = item['備考'] || "特になし";
 
     // 1. 初期化：複数枚用クラスを一旦消し、メイン画像をfrontに設定
     bookRight.classList.remove('has-multiple-thumbs');
