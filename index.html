@@ -580,7 +580,7 @@ async function openModalByIdx(originalIdx) {
     // ※スプレッドシートの列名に合わせて ['〇〇'] の中身を変えてください
     document.getElementById('modalDye').innerText = item['染色'] || "不可";
     document.getElementById('modalMarket').innerText = item['マケボ'] || "不可";
-    document.getElementById('modalCraft').innerText = item['製作'] || "-";
+    document.getElementById('modalCraft').innerText = item['レシピ詳細'] || "-";
 
     // 入手方法と備考
     document.getElementById('modalHowToGet').innerText = item['入手方法'] || "確認中";
