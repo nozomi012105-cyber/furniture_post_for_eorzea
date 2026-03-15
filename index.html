@@ -261,6 +261,12 @@
     let allData = [];
     let currentFilter = { type: 'all', value: 'all', subValue: 'all' };
 
+    // --- ここから追加：無限ロード用 ---
+    let displayList = [];      // フィルタリングされた後の全データ
+    let currentIndex = 0;      // 今どこまで表示したか
+    const itemsPerPage = 24;   // 1回に表示する件数（グリッドに合わせて調整）
+    let isLoading = false;     // 重複読み込み防止
+
     window.onload = async function() {
         const response = await fetch(GAS_URL);
         const data = await response.json();
@@ -372,18 +378,35 @@
         }
     }
 
+// 検索やフィルタが変わった時に、画面をリセットして最初から描画する
     function render() {
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
-        let lastPatch = "";
+        currentIndex = 0; // 読み込み位置をリセット
 
-        const filtered = allData.filter(item => {
-            const matchMain = (currentFilter.type === 'category' ? item.category === currentFilter.value : currentFilter.type === 'patch' ? item.patch === currentFilter.value : currentFilter.type === 'search' ? (item['アイテム名（日）'] || item.name || "").includes(currentFilter.value) : true);
+        // 今のフィルター条件で「表示すべき全データ」のリストを作る
+        displayList = allData.filter(item => {
+            const matchMain = (currentFilter.type === 'category' ? item.category === currentFilter.value : 
+                              currentFilter.type === 'patch' ? item.patch === currentFilter.value : 
+                              currentFilter.type === 'search' ? (item['アイテム名（日）'] || item.name || "").includes(currentFilter.value) : true);
             const matchSub = (currentFilter.subValue === 'all' || item['FF14サブカテゴリー'] === currentFilter.subValue);
             return matchMain && matchSub;
         });
 
-        filtered.forEach((item, index) => {
+        loadMoreItems(); // 最初の24件を表示
+    }
+
+    // 続きのデータを24件ずつ作成してグリッドに追加する
+    function loadMoreItems() {
+        if (isLoading || currentIndex >= displayList.length) return;
+        isLoading = true;
+
+        const grid = document.getElementById('grid');
+        const nextBatch = displayList.slice(currentIndex, currentIndex + itemsPerPage);
+        let lastPatch = (currentIndex > 0) ? displayList[currentIndex - 1].patch : "";
+
+        nextBatch.forEach((item) => {
+            // パッチ別モード時の仕切り
             if (currentFilter.type === 'patch' && item.patch !== lastPatch) {
                 const div = document.createElement('div');
                 div.className = 'patch-divider';
@@ -395,9 +418,19 @@
             const itemId = item['ItemID'] || item['アイテムID'];
             const card = document.createElement('div');
             card.className = 'cheki-card';
-            card.innerHTML = `<div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})"><img src="images/${itemId}_front.png" class="slide-img active" onerror="this.src='https://placehold.jp/200x200.png?text=No%20Image'"></div><p class="item-name">${item['アイテム名（日）'] || item.name}</p>`;
+            
+            // originalIdxを正確に渡すために allData.indexOf(item) を使用
+            card.innerHTML = `
+                <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
+                    <img src="images/${itemId}_front.png" class="slide-img active" onerror="this.src='https://placehold.jp/200x200.png?text=No%20Image'">
+                </div>
+                <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
+            `;
             grid.appendChild(card);
         });
+
+        currentIndex += itemsPerPage;
+        isLoading = false;
     }
 
 async function openModalByIdx(originalIdx) {
@@ -496,6 +529,16 @@ async function openModalByIdx(originalIdx) {
 }
 
     function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
+
+    // スクロールを監視して、一番下まで来たら次のバッチを読み込む
+    window.addEventListener('scroll', () => {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        // 下から300pxの位置に来たら読み込み開始
+        if (scrollTop + clientHeight >= scrollHeight - 300) {
+            loadMoreItems();
+        }
+    });
+    
 </script>
 </body>
 </html>
