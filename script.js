@@ -158,3 +158,40 @@ function buildHome() {
 }
 function showHome() { document.getElementById('home-view').style.display='block'; document.getElementById('catalog-view').style.display='none'; }
 // モーダル等は前回のコードをそのまま維持してください
+
+// --- モーダル制御（中身は変更なし） ---
+let currentModalIdx = -1;
+async function openModalByIdx(originalIdx) {
+    currentModalIdx = originalIdx;
+    const item = allData[originalIdx];
+    const itemId = item['ItemID'] || item['アイテムID'];
+    document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
+    const subBadge = document.getElementById('modalSubCategory');
+    subBadge.innerText = item['FF14サブカテゴリー'] || "";
+    subBadge.style.display = subBadge.innerText ? "inline-flex" : "none";
+    document.getElementById('modalDye').innerText = item['dyeable'] || "不可";
+    document.getElementById('modalMarket').innerText = item['market'] || "不可";
+    document.getElementById('modalCraft').innerText = item['recipe'] || "-";
+    document.getElementById('modalHowToGet').innerText = item['入手方法'] || "確認中";
+    document.getElementById('modalComment').innerText = item['note'] || "特になし";
+    const photoArea = document.getElementById('modalPhoto');
+    photoArea.innerHTML = `<img src="images/${itemId}_front.png" id="mainModalImg" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
+    document.getElementById('itemModal').classList.add('visible');
+}
+
+function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
+
+function changeModalItem(direction) {
+    const currentItem = allData[currentModalIdx];
+    let currentIndexInDisplay = displayList.indexOf(currentItem);
+    let nextIndexInDisplay = currentIndexInDisplay + direction;
+    if (nextIndexInDisplay >= 0 && nextIndexInDisplay < displayList.length) {
+        openModalByIdx(allData.indexOf(displayList[nextIndexInDisplay]));
+    }
+}
+
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+        loadMoreItems();
+    }
+});
