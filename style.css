@@ -16,29 +16,11 @@ body {
     font-family: 'Noto Sans JP', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
-    display: flex; /* PC版では横並び */
+    display: flex; /* PC版の基本構成に戻す */
     min-height: 100vh;
 }
 
-/* --- 三本線ボタン（PCでは隠す） --- */
-#menu-toggle {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 5000;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-/* --- サイドバー --- */
+/* --- サイドバー（安定版） --- */
 #sidebar {
     width: 270px;
     min-width: 270px;
@@ -50,12 +32,11 @@ body {
     overflow-y: auto;
     box-shadow: 2px 0 10px rgba(0,0,0,0.05);
     z-index: 1000;
-    transition: left 0.3s ease;
 }
 
 #sidebar h1 { font-size: 1.2rem; color: var(--primary-color); margin-bottom: 30px; text-align: center; }
 
-/* サイドバー内の文字溢れ対策 */
+/* サイドバー内の文字溢れ防止 */
 .nav-item-parent {
     display: flex; justify-content: space-between; align-items: center;
     width: 100%; padding: 10px; border: none; background: none;
@@ -65,8 +46,12 @@ body {
 }
 .nav-item-parent span { overflow: hidden; text-overflow: ellipsis; flex: 1; display: flex; align-items: center; }
 .nav-item-parent span i { margin-right: 8px; width: 1.2em; text-align: center; }
+.nav-item-parent:hover { background: rgba(255,255,255,0.4); }
 
-/* --- メインコンテンツ構造 --- */
+.sub-menu { display: none; padding-left: 15px; margin-top: 5px; }
+.sub-menu.open { display: block; }
+
+/* --- メインコンテンツ --- */
 #container {
     display: flex;
     flex: 1;
@@ -77,10 +62,9 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-width: 0;
 }
 
-/* --- 各種表示エリア --- */
+/* --- 各ビュー --- */
 #home-view { max-width: 900px; margin: 40px auto; text-align: center; padding: 0 20px; }
 #catalog-view { display: none; width: 100%; }
 
@@ -92,16 +76,29 @@ body {
 .content-body { padding: 20px 40px 40px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
 
-/* --- チェキカード & アイコン --- */
+/* --- チェキカード & 右下アイコン群（これまでの可愛い設定を維持） --- */
 .cheki-card {
-    position: relative; background-color: var(--card-bg); padding: 12px 12px 18px;
-    border-radius: 10px; box-shadow: var(--shadow); transition: 0.3s;
-    display: flex; flex-direction: column;
+    position: relative;
+    background-color: var(--card-bg);
+    padding: 12px 12px 18px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
 }
+
+.photo-area { position: relative; width: 100%; aspect-ratio: 1; border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+.slide-img { position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; opacity: 0; transition: 0.3s; }
+.slide-img.active { opacity: 1; }
+
 .item-name {
     font-size: 0.8rem; font-weight: bold; text-align: center; margin: 8px 0;
-    color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: var(--primary-color); line-height: 1.2; min-height: 1.8em;
+    display: flex; align-items: center; justify-content: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+
 .card-flags { display: flex; justify-content: flex-end; gap: 3px; margin-top: auto; padding-right: 4px; }
 .flag-diamond {
     width: 18px; height: 18px; transform: rotate(45deg); border-radius: 3px;
@@ -113,41 +110,35 @@ body {
 .flag-market { background: linear-gradient(135deg, #a2d149, #2e7d32); }
 .flag-craft { background: linear-gradient(135deg, #7644ac, #252a60); }
 
-/* --- 鉄壁のレスポンシブ設定 (1100px以下) --- */
+/* --- レスポンシブ（一旦、安全な範囲まで戻す） --- */
 @media (max-width: 1100px) {
-    /* 1. 全体のFlexを解除して余白を更地にする */
-    body, #container { display: block !important; }
-
-    /* 2. 三本線ボタンを表示 */
-    #menu-toggle { display: block !important; }
-
-    /* 3. サイドバーを完全に浮かせて画面外へ */
     #sidebar {
-        position: fixed !important;
-        left: -300px !important;
-        top: 0;
-        z-index: 4500;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-        margin: 0 !important;
+        display: none; /* スマホでは潔く消す（一旦ハンバーガーは忘れる） */
     }
-
-    /* ボタンで開いた時 */
-    #sidebar.open { left: 0 !important; }
-
-    /* 4. メインコンテンツを左端から開始させる */
     #main-content {
-        margin-left: 0 !important;
         width: 100% !important;
     }
-
-    .sticky-header { padding: 70px 15px 10px !important; }
     .grid {
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 12px !important;
-        padding: 10px 15px;
     }
 }
 
 @media (max-width: 600px) {
-    .grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }
+
+/* モーダル用タグ色（青紫と赤） */
+#modalMainCategory { background-color: #6670b0 !important; }
+#modalSubCategory { background-color: #7f3030 !important; }
+
+/* トップへ戻るボタン（前回の可愛い設定） */
+#backToTop {
+    position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+    background-color: #6670b0; color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 3000;
+    opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.4s;
+}
+#backToTop.visible { opacity: 0.85; visibility: visible; transform: translateY(0); }
