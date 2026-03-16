@@ -295,14 +295,19 @@ function loadMoreItems() {
     const nextBatch = displayList.slice(currentIndex, currentIndex + itemsPerPage);
     let lastPatch = (currentIndex > 0) ? displayList[currentIndex - 1].patch : "";
 
+    // loadMoreItems 関数内の if (currentFilter.type === 'patch-group' ...) の部分を修正
     nextBatch.forEach((item) => {
-        if (currentFilter.type === 'patch-group' && item.patch !== lastPatch) {
+        const itemPatch = formatPatch(item.patch);
+        
+        // パッチが切り替わったら仕切りを入れる（patch-group または patch 選択時）
+        if ((currentFilter.type === 'patch-group' || currentFilter.type === 'patch') && itemPatch !== lastPatch) {
             const div = document.createElement('div');
             div.className = 'patch-divider';
-            div.innerText = formatPatch(item.patch);
+            div.innerText = itemPatch;
             grid.appendChild(div);
-            lastPatch = item.patch;
+            lastPatch = itemPatch;
         }
+        // ... (card 生成の処理はそのまま)
 
         const itemId = item['ItemID'] || item['アイテムID'];
         const card = document.createElement('div');
