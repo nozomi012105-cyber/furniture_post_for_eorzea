@@ -129,8 +129,8 @@ body {
     background: var(--primary-color);
     transform: translateY(-50%) scale(1.1);
 }
-.nav-prev { left: 20px; } 
-.nav-next { right: 20px; }
+.nav-prev { left: -60px; } 
+.nav-next { right: -60px; }
 
 @media (max-width: 1200px) {
     .nav-prev { left: 10px; background: rgba(255,255,255,0.7); }
