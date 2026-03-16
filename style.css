@@ -29,9 +29,26 @@ body {
 .nav-item-parent {
     display: flex; justify-content: space-between; align-items: center;
     width: 100%; padding: 10px; border: none; background: none;
-    text-align: left; cursor: pointer; border-radius: 8px; font-size: 0.9rem;
+    text-align: left; cursor: pointer; border-radius: 8px;
+
+    /* --- 修正ポイント：一行に収めるための設定 --- */
+    font-size: 0.85rem;         /* 0.9remから微調整（収まりを良くする） */
+    white-space: nowrap;       /* 絶対に改行させない */
+    overflow: hidden;          /* はみ出しを隠す */
+    letter-spacing: -0.3px;    /* ほんの少し文字間を詰めて余白を確保 */
+    /* -------------------------------------- */
+
     color: var(--primary-color); transition: 0.2s;
 }
+
+.nav-item-parent span {
+    display: flex;
+    align-items: center;
+    overflow: hidden;         /* テキストが長い場合に備えて */
+    text-overflow: ellipsis;  /* もし限界まで狭まったら「...」にする */
+    flex: 1;
+}
+
 .nav-item-parent:hover { background: rgba(255,255,255,0.4); }
 .sub-menu { display: none; padding-left: 15px; margin-top: 5px; }
 .sub-menu.open { display: block; }
