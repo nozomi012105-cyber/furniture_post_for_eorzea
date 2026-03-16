@@ -307,3 +307,8 @@ body {
     .content-body { padding: 20px; }
     .book-layout { flex-direction: column; height: auto; max-height: 90vh; }
 }
+
+/* 画像がない家具カードを非表示にするクラス */
+.hidden-card {
+    display: none !important; /* 強制的に非表示にする */
+}
