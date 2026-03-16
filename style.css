@@ -107,7 +107,20 @@ body {
 .slide-img.active { opacity: 1; }
 .slider-controls { display: flex; justify-content: center; gap: 4px; margin-bottom: 8px; }
 .slide-btn { background: rgba(0,0,0,0.05); border: none; border-radius: 4px; font-size: 9px; cursor: pointer; padding: 2px 6px; }
-.item-name { font-size: 0.8rem; font-weight: bold; text-align: center; margin: 0; color: var(--primary-color); }
+
+.item-name {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center; /* 名前は中央寄せ */
+    margin: 8px 0 6px 0; /* 上下に少し余白 */
+    color: var(--primary-color);
+    line-height: 1.2;
+    min-height: 2.4em; /* 2行分確保してアイコンの位置を揃える */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .patch-divider {
     grid-column: 1 / -1; /* 横いっぱいに広げる */
     width: 100%;
@@ -257,23 +270,29 @@ body {
 /* --- 新しいアイコン置き場（カード右下に配置） --- */
 .card-flags {
     display: flex;
-    justify-content: flex-end; /* ★追加：右寄せにする */
-    gap: 3px;  /* ★追加：アイコン同士の間隔を4pxから3pxに狭めてキュッとさせる */
-    margin-bottom: 6px; /* ★追加：アイコンと名前の間の余白 */
-    padding-right: 4px; /* ★追加：右側に少し余裕をもたせる */
+    justify-content: flex-end; /* 右寄せ */
+    gap: 3px;                 /* アイコン同士をキュッと詰める */
+    margin-top: auto;         /* 名前の長さに関わらず下の方に配置 */
+    padding-right: 4px;       /* 右に少し余裕をもたせる */
+    padding-bottom: 2px;      /* 下に少し余裕をもたせる */
 }
 
-/* --- ひし形土台の設定（少し微調整） --- */
+/* --- ひし形の設定（サイズ・色・形は前回のまま） --- */
 .flag-diamond {
-    width: 18px;  /* ★追加：さらに一回り小さく（20px→18px）して可愛らしく */
-    height: 18px; /* ★追加：さらに一回り小さく（20px→18px）して可愛らしく */
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     transform: rotate(45deg);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2); /* 影をさらに柔らかく */
-    border: 1px solid rgba(255,255,255,0.5); /* 白い枠線を少し強調 */
-    /* position: relative; など不要なものは削除 */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.flag-diamond span {
+    transform: rotate(-45deg); 
+    font-size: 9px;
+    line-height: 1;
 }
 
 /* --- 中の絵文字をまっすぐに戻す（サイズ調整） --- */
@@ -302,7 +321,7 @@ body {
 .cheki-card {
     position: relative;
     background-color: var(--card-bg);
-    padding: 12px 12px 24px; /* 下側のパディングを18pxから24pxに広げて余白を作る */
+    padding: 12px 12px 18px; /* 下側のパディングを18pxから24pxに広げて余白を作る */
     border-radius: 10px;
     box-shadow: var(--shadow);
     transition: 0.3s;
