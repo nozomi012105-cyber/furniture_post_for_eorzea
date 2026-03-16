@@ -198,29 +198,55 @@ body {
     }
 }
 
-/* 画面幅が1100px以下になった時のルール */
+/* --- レスポンシブ設定：画面幅1100px以下 --- */
 @media (max-width: 1100px) {
-    /* 1. 全体のレイアウトを縦並び（またはサイドバー固定解除）にする */
+    /* 1. 三本線ボタンを表示 */
+    #menu-toggle {
+        display: block !important; /* 強制的に表示 */
+    }
+
+    /* 2. サイドバーを隠しメニュー化 */
+    #sidebar {
+        position: fixed;
+        left: -280px; /* 画面外へ */
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        z-index: 3500;
+        transition: left 0.3s ease;
+        background-color: var(--sidebar-bg);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        display: block !important; /* display:noneを上書き */
+    }
+
+    /* サイドバーが開いた時 */
+    #sidebar.open {
+        left: 0;
+    }
+
+    /* 3. 全体レイアウトの調整 */
     #container {
         flex-direction: column;
+        display: block;
     }
 
-    /* 2. サイドバーを上部に配置するか、横幅いっぱいに広げる */
-    #sidebar {
-        width: 100%;
-        min-width: 100%;
-        height: auto;
-        position: relative;
-        padding: 20px;
+    main, #main-content {
+        margin-left: 0 !important;
+        padding-top: 60px; /* 三本線ボタンと被らない余白 */
     }
 
-    /* 3. グリッド（カード）の余白を調整して3枚並びやすくする */
+    /* 4. カタログ画面の余白調整 */
+    .sticky-header {
+        padding: 15px 20px 5px;
+    }
+
+    /* 5. グリッドを3枚並びにする */
     #grid {
-        grid-template-columns: repeat(3, 1fr); /* 強制的に3枚並びにする */
-        gap: 15px;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px;
     }
 }
-
+    
 /* さらにスマホサイズ（画面幅600px以下） */
 @media (max-width: 600px) {
     #grid {
@@ -412,13 +438,6 @@ body {
     margin-right: 8px;
     width: 1.2em;
     text-align: center;
-}
-
-@media (max-width: 768px) {
-    #sidebar { display: none; }
-    .sticky-header { padding: 15px 20px 5px; }
-    .content-body { padding: 20px; }
-    .book-layout { flex-direction: column; height: auto; max-height: 90vh; }
 }
 
 #backToTop {
