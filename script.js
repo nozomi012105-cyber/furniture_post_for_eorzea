@@ -54,41 +54,38 @@ function loadMoreItems() {
     let lastP = (currentIndex > 0) ? formatPatch(displayList[currentIndex-1].patch) : "";
 
     next.forEach(item => {
-        // --- モーダル側の参照項目と完全に一致させる ---
-        const dyeVal = item['染色'];  // modalDyeに対応
-        const marketVal = item['マケボ']; // modalMarketに対応
-        const craftVal = item['製作']; // modalCraftに対応
-        const itemId = item.ItemID || item['アイテムID'];
-        // ------------------------------------------
+    // --- 項目名のズレを吸収する書き方 ---
+    // 染色: 「染色」という項目がなければ「dyeable」を探す
+    const dyeVal = item['染色'] || item.dyeable || item['染色可否'];
+    
+    // マケボ: 「マケボ」がなければ「market」や「マケボ取引」を探す
+    const marketVal = item['マケボ'] || item.market || item['マケボ取引'];
+    
+    // 製作: 「製作」がなければ「recipe」を探す（これは現在出ているので今のままでOK）
+    const craftVal = item['製作'] || item.recipe || item['製作可否'];
+    
+    const itemId = item.ItemID || item['アイテムID'];
+    // ----------------------------------
 
-        const currentP = formatPatch(item.patch);
-        if((currentFilter.type === 'patch-group' || currentFilter.type === 'patch') && currentP !== lastP) {
-            const div = document.createElement('div');
-            div.className = 'patch-divider';
-            div.innerText = currentP;
-            grid.appendChild(div);
-            lastP = currentP;
-        }
-        
-        const card = document.createElement('div');
-        card.className = 'cheki-card';
-        
-        card.innerHTML = `
-            <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
-                <img src="images/${itemId}_front.png" 
-                     class="slide-img active" 
-                     onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
-                
-                <div class="card-flags">
-                    ${(dyeVal && dyeVal !== '不可') ? '<div class="flag-diamond flag-dye"><span>🎨</span></div>' : ''}
-                    ${(marketVal && marketVal !== '不可') ? '<div class="flag-diamond flag-market"><span>💰</span></div>' : ''}
-                    ${(craftVal && craftVal !== '-' && craftVal !== '不可' && craftVal !== '') ? '<div class="flag-diamond flag-craft"><span>🔨</span></div>' : ''}
-                </div>
+    const card = document.createElement('div');
+    card.className = 'cheki-card';
+    
+    card.innerHTML = `
+        <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
+            <img src="images/${itemId}_front.png" 
+                 class="slide-img active" 
+                 onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
+            
+            <div class="card-flags">
+                ${(dyeVal && dyeVal !== '不可') ? '<div class="flag-diamond flag-dye"><span>🎨</span></div>' : ''}
+                ${(marketVal && marketVal !== '不可') ? '<div class="flag-diamond flag-market"><span>💰</span></div>' : ''}
+                ${(craftVal && craftVal !== '-' && craftVal !== '不可' && craftVal !== '') ? '<div class="flag-diamond flag-craft"><span>🔨</span></div>' : ''}
             </div>
-            <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
-        `;
-        grid.appendChild(card);
-    });
+        </div>
+        <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
+    `;
+    grid.appendChild(card);
+});
     currentIndex += itemsPerPage;
     isLoading = false;
 }
