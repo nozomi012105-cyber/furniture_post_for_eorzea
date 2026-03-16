@@ -124,6 +124,7 @@ function buildMenu() {
                 </div>
             </div>
         `).join('');
+    };
 
 function toggleSubMenu(btn, category) {
     const subMenu = btn.nextElementSibling;
