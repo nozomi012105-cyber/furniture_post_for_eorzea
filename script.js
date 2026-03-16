@@ -76,6 +76,8 @@ function loadMoreItems() {
                  class="slide-img active" 
                  onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
         </div>
+
+        <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
             
             <div class="card-flags">
                 ${(dyeVal && dyeVal !== '不可') ? '<div class="flag-diamond flag-dye"><span>🎨</span></div>' : ''}
