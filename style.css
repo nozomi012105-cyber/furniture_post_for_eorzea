@@ -309,23 +309,24 @@ body {
 }
 
 #backToTop {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
+    position: fixed !important; /* 絶対にこの位置 */
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 60px !important;
+    height: 60px !important;
+    background-color: #6670b0 !important; /* カテゴリと同じ青紫色 */
+    color: white !important;
+    border-radius: 50% !important;
+    display: flex !important; /* 強制表示 */
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    opacity: 0; /* 最初は隠す */
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 3000;
+    z-index: 9999 !important; /* 何よりも上に */
+    
+    /* ↓ 一旦、スクロール判定を無視して「常に表示」させて確認します */
+    opacity: 1 !important;
+    visibility: visible !important;
+}
 
 /* JSの add('visible') と名前を合わせる */
 #backToTop.visible {
