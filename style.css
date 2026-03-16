@@ -254,51 +254,50 @@ body {
     border-radius: 4px;
 }
 
-/* アイコン全体のコンテナ（カード右下に配置） */
+/* アイコン全体のコンテナ（少し位置を調整） */
 .card-flags {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 6px;  /* 8pxから少し詰める */
+    right: 6px;   /* 8pxから少し詰める */
     display: flex;
-    gap: 6px;
+    gap: 4px;     /* アイコン同士の間隔を少し詰める */
     z-index: 10;
 }
 
-/* ひし形土台の共通設定 */
+/* ひし形土台の共通設定（一回り小さく） */
 .flag-diamond {
-    width: 24px;
-    height: 24px;
+    width: 20px;  /* 24pxから20pxにサイズダウン */
+    height: 20px; /* 24pxから20pxにサイズダウン */
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    transform: rotate(45deg); /* ここで◆にする */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.3);
+    transform: rotate(45deg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* 影も少し柔らかく */
+    border: 1px solid rgba(255,255,255,0.4); /* 白い枠線を少し強調 */
 }
 
-/* 中の絵文字をまっすぐに戻す */
+/* 中の絵文字をまっすぐに戻す（サイズも調整） */
 .flag-diamond span {
     transform: rotate(-45deg); 
-    font-size: 12px;
+    font-size: 10px; /* 12pxから10pxに微調整 */
     line-height: 1;
 }
 
-/* 1. 染色可能 (金〜橙) */
+/* 1. 染色可能 (水色〜濃い水色) ← ★色を変更しました */
 .flag-dye {
-    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    background: linear-gradient(135deg, #a0f0ff, #0099cc); /* 爽やかな水色のグラデーション */
 }
 
-/* 2. マケボ可能 (黄緑〜緑) */
+/* 2. マケボ可能 (黄緑〜緑) ← 色はそのまま */
 .flag-market {
     background: linear-gradient(135deg, #a2d149, #2e7d32);
 }
 
-/* 3. 製作可能 (紫〜紺) */
+/* 3. 製作可能 (紫〜紺) ← 色はそのまま */
 .flag-craft {
     background: linear-gradient(135deg, #7644ac, #252a60);
 }
-
 /* カード自体の設定に position: relative を追加（右下配置の基準にするため） */
 .cheki-card {
     position: relative; /* 追記 */
