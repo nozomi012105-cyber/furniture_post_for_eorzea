@@ -115,7 +115,7 @@ body {
     margin: 8px 0 6px 0; /* 上下に少し余白 */
     color: var(--primary-color);
     line-height: 1.2;
-    min-height: 1.2em; /* 2行分確保してアイコンの位置を揃える */
+    min-height: 1.8em; /* 2行分確保してアイコンの位置を揃える */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -278,13 +278,19 @@ body {
 }
 
 /* --- ひし形の設定（サイズ・色・形は前回のまま） --- */
+/* ひし形土台の設定（角丸を追加） */
 .flag-diamond {
     width: 18px;
     height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: rotate(45deg);
+    transform: rotate(45deg); /* ここで◆にする */
+    
+    /* ★ここを追加：角を丸くする（2px〜3pxくらいが可愛いです） */
+    border-radius: 2px; /* 2pxだとほんのり、3pxだとしっかり丸くなります */
+    
+    /* 以前の設定はそのまま */
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     border: 1px solid rgba(255,255,255,0.5);
 }
