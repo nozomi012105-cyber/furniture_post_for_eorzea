@@ -84,8 +84,6 @@ function loadMoreItems() {
                 ${(marketVal && marketVal !== '不可') ? '<div class="flag-diamond flag-market"><span>💰</span></div>' : ''}
                 ${(craftVal && craftVal !== '-' && craftVal !== '不可' && craftVal !== '') ? '<div class="flag-diamond flag-craft"><span>🔨</span></div>' : ''}
             </div>
-        
-        <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
     `;
     grid.appendChild(card);
 });
