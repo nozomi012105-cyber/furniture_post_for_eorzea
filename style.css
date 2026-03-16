@@ -254,6 +254,57 @@ body {
     border-radius: 4px;
 }
 
+/* アイコン全体のコンテナ（カード右下に配置） */
+.card-flags {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+}
+
+/* ひし形土台の共通設定 */
+.flag-diamond {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotate(45deg); /* ここで◆にする */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* 中の絵文字をまっすぐに戻す */
+.flag-diamond span {
+    transform: rotate(-45deg); 
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* 1. 染色可能 (金〜橙) */
+.flag-dye {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+}
+
+/* 2. マケボ可能 (黄緑〜緑) */
+.flag-market {
+    background: linear-gradient(135deg, #a2d149, #2e7d32);
+}
+
+/* 3. 製作可能 (紫〜紺) */
+.flag-craft {
+    background: linear-gradient(135deg, #7644ac, #252a60);
+}
+
+/* カード自体の設定に position: relative を追加（右下配置の基準にするため） */
+.cheki-card {
+    position: relative; /* 追記 */
+    /* 他の既存設定はそのままでOK */
+}
+
 .thumb-nav {
     display: none;
     gap: 10px; 
