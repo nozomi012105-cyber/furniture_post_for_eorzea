@@ -18,10 +18,12 @@ body {
 
 /* --- サイドバー --- */
 #sidebar {
-    width: 260px; background-color: var(--sidebar-bg);
+    width: 270px; background-color: var(--sidebar-bg);
+    min-width: 240px;
     padding: 25px 15px; position: sticky; top: 0; height: 100vh;
     overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.05); z-index: 1000;
 }
+
 #sidebar h1 { font-size: 1.2rem; color: var(--primary-color); margin-bottom: 30px; text-align: center; }
 .nav-group { margin-bottom: 20px; }
 .nav-label { font-size: 0.75rem; font-weight: bold; color: rgba(125,107,93,0.6); margin-bottom: 10px; display: block; border-bottom: 1px solid rgba(0,0,0,0.05); }
@@ -196,6 +198,36 @@ body {
     }
 }
 
+/* 画面幅が1100px以下になった時のルール */
+@media (max-width: 1100px) {
+    /* 1. 全体のレイアウトを縦並び（またはサイドバー固定解除）にする */
+    #container {
+        flex-direction: column;
+    }
+
+    /* 2. サイドバーを上部に配置するか、横幅いっぱいに広げる */
+    #sidebar {
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+        position: relative;
+        padding: 20px;
+    }
+
+    /* 3. グリッド（カード）の余白を調整して3枚並びやすくする */
+    #grid {
+        grid-template-columns: repeat(3, 1fr); /* 強制的に3枚並びにする */
+        gap: 15px;
+    }
+}
+
+/* さらにスマホサイズ（画面幅600px以下） */
+@media (max-width: 600px) {
+    #grid {
+        grid-template-columns: repeat(2, 1fr); /* スマホは2枚並び */
+    }
+}
+
 .tag-badge {
     display: inline-flex;
     align-items: center;
@@ -288,7 +320,7 @@ body {
     transform: rotate(45deg); /* ここで◆にする */
     
     /* ★ここを追加：角を丸くする（2px〜3pxくらいが可愛いです） */
-    border-radius: 2px; /* 2pxだとほんのり、3pxだとしっかり丸くなります */
+    border-radius: 3px; /* 2pxだとほんのり、3pxだとしっかり丸くなります */
     
     /* 以前の設定はそのまま */
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
