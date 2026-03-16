@@ -325,7 +325,7 @@ body {
     opacity: 0; /* 最初は隠す */
     visibility: hidden;
     transition: all 0.3s ease;
-    z-index: 1500;
+    z-index: 2000;
 
 /* JSの add('visible') と名前を合わせる */
 #backToTop.visible {
