@@ -96,15 +96,49 @@ function buildMenu() {
         return `<div class="nav-item-container"><button class="nav-item-parent" onclick="toggleSubMenu(this, '${c}')"><span><i class="fa-solid fa-angle-right"></i> ${c}</span>${subs.length > 0 ? '<i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>' : ''}</button><div class="sub-menu"><button class="nav-item-sub" onclick="filterBy('category', '${c}', 'all')">すべて表示</button>${subs.map(s => `<button class="nav-item-sub" onclick="filterBy('category', '${c}', '${s}')">${s}</button>`).join('')}</div></div>`;
     }).join('');
 
-    const patches = [...new Set(allData.map(i => i.patch))].sort((a,b) => b-a);
-    document.getElementById('side-patch-list').innerHTML = patches.map(p => `<button class="nav-item-parent" onclick="filterBy('patch', '${p}')"><span><i class="fa-solid fa-tag"></i> ${formatPatch(p)}</span></button>`).join('');
-}
+    const patches = [...new Set(allData.map(i => i.patch))].sort((a, b) => b - a);
+
+    // パッチを「x.x系」でグループ化する
+    const groups = {};
+    patches.forEach(p => {
+        const major = p.toString().split('.')[0]; // "7.1" なら "7" を取得
+        const groupName = `Patch ${major}.x`;
+        if (!groups[groupName]) groups[groupName] = [];
+        groups[groupName].push(p);
+    });
+    
+    // HTML生成
+        const sidePatchList = document.getElementById('side-patch-list');
+        sidePatchList.innerHTML = Object.keys(groups).map(groupName => `
+            <div class="nav-item-container">
+                <button class="nav-item-parent" onclick="toggleSubMenu(this, 'all')">
+                    <span><i class="fa-solid fa-folder-open"></i> ${groupName}</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+                </button>
+                <div class="sub-menu">
+                    ${groups[groupName].map(p => `
+                        <button class="nav-item-sub" onclick="filterBy('patch', '${p}')">
+                            ${formatPatch(p)}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
 
 function toggleSubMenu(btn, category) {
     const subMenu = btn.nextElementSibling;
     const isOpen = subMenu.classList.contains('open');
+    
     document.querySelectorAll('.sub-menu').forEach(m => m.classList.remove('open'));
-    if (!isOpen) { subMenu.classList.add('open'); filterBy('category', category, 'all'); }
+    if (!isOpen) {
+        subMenu.classList.add('open');
+        // カテゴリーの場合だけ初期フィルタリングを実行
+        if(category !== 'all') {
+            filterBy('category', category, 'all');
+        }
+    } else {
+        subMenu.classList.remove('open');
+    }
 }
 
 function buildHome() {
