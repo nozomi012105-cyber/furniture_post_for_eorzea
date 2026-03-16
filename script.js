@@ -155,7 +155,9 @@ function toggleSubMenu(btn, category) {
     const subMenu = btn.nextElementSibling;
     const isOpen = subMenu.classList.contains('open');
     
-    document.querySelectorAll('.sub-menu').forEach(m => m.classList.remove('open'));
+    // 【修正】他のメニューを勝手に閉じないように、一旦全部消す処理をコメントアウトするか削除します
+    //　document.querySelectorAll('.sub-menu').forEach(m => m.classList.remove('open'));
+    
     if (!isOpen) {
         subMenu.classList.add('open');
         // 親ボタンを押した時にそのグループでフィルタリング
