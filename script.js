@@ -252,6 +252,11 @@ window.onscroll = () => {
     }
 };
 
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
 // ボタンをクリックした時の動作（念のため）
 function scrollToTop() {
     window.scrollTo({
