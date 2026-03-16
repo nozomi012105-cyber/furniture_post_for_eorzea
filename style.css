@@ -198,68 +198,79 @@ body {
     }
 }
 
-    /* --- 1. 三本線ボタンの基本スタイル（PCでは隠す） --- */
-#menu-toggle {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 5000;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-/* --- 2. 画面幅1100px以下のレスポンシブ設定 --- */
-@media (max-width: 1100px) {
-    /* 三本線ボタンを表示 */
+    /* --- 三本線ボタン（PCでは隠す） --- */
     #menu-toggle {
-        display: block;
+        display: none;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 5000; /* 最前面に */
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    /* サイドバーを画面外に隠す */
+    /* --- レスポンシブ：1100px以下 --- */
+    @media (max-width: 1100px) {
+        /* 1. ボタンを表示 */
+        #menu-toggle {
+            display: block !important;
+        }
+
+    /* 2. BodyのFlexを解除して余白の計算をリセット */
+    body {
+        display: block !important;
+    }
+
+    /* 3. サイドバーを完全固定にして浮かせる */
     #sidebar {
         position: fixed !important;
         left: -280px !important; /* 画面外へ */
         top: 0;
         width: 260px;
         height: 100vh;
-        z-index: 4000;
+        z-index: 4500;
         transition: left 0.3s ease;
-        display: block !important; /* 以前のdisplay:noneを上書き */
+        margin: 0 !important;
     }
 
-    /* 開いた時のアニメーション */
+    /* 開いた時 */
     #sidebar.open {
         left: 0 !important;
     }
 
-    /* メインコンテンツを横幅いっぱいにする */
+    /* 4. メインコンテンツを画面横幅いっぱいに広げる（余白を消す） */
     #container {
-        display: block;
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     #main-content {
-        margin-left: 0 !important;
+        margin-left: 0 !important; /* これが余白の正体 */
         width: 100% !important;
+        padding-top: 60px !important; /* ボタンに被らないように */
     }
-
-    /* カタログ画面の余白調整 */
+        
+    /* カタログ上部のヘッダーも横幅いっぱい */
     .sticky-header {
-        padding: 70px 20px 10px !important; /* ボタンと被らないよう上を空ける */
+        left: 0 !important;
+        width: 100% !important;
+        padding: 70px 20px 10px !important;
     }
     
     .content-body {
         padding: 10px 20px 40px !important;
     }
 
-    /* カードを3枚並びにする */
+    /* グリッドを3列にする */
     .grid {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 12px !important;
