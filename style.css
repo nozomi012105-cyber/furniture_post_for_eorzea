@@ -162,6 +162,7 @@ body {
 }
 
 .book-layout {
+    position: relative;
     display: flex;
     flex-direction: row; /* 横並びを強制 */
     width: 95vw;
@@ -435,35 +436,30 @@ body {
     filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
 }
 
+/* 2. ×ボタンの設定 */
 .close-modal {
-    /* 1. 配置の基準を「本の枠」の右上に固定 */
-    position: absolute;
-    top: 20px;
-    right: 20px;
-
-    /* 2. 見た目の調整（押しやすく、見つけやすく） */
+    position: absolute; /* .book-layout の中での位置を指定 */
+    top: 15px;    /* 枠の上から15px */
+    right: 15px;   /* 枠の右から15px */
+    
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.8); /* 少し白背景を入れると画像に埋もれません */
-    color: #7d6b5d; /* 変数 --primary-color と同じ色 */
+    background: rgba(255, 255, 255, 0.7); /* 画像に重なっても見やすいように */
+    color: var(--primary-color);
     border-radius: 50%;
-    
-    /* 3. 中央に「×」を配置 */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    line-height: 1;
-    
-    /* 4. 重なり順（最前面へ） */
-    z-index: 10000; 
+    font-size: 24px;
+    z-index: 100; /* 本の中身より上に表示 */
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.05); /* ほんの少し縁取り */
 }
 
 .close-modal:hover {
     background: #ffffff;
-    color: #000000;
+    transform: scale(1.1);
 }
 
 .status-grid { margin: 0 auto 30px; max-width: 400px; }
