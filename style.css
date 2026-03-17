@@ -137,14 +137,15 @@ body {
 /* モーダル */
 .modal { display: none; position: fixed; z-index: 2000; left:0; top:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
 .modal.visible { display: flex; }
+
 .book-layout {
     display: flex;
+    flex-direction: row; /* 横並びを強制 */
     width: 95vw;
     max-width: 1000px;
     height: 80vh;
     background: #fdfaf3;
     border-radius: 12px;
-    overflow: hidden; position: relative;
 }
 
 .modal-nav {
@@ -228,14 +229,18 @@ body {
     background-color: #7f3030 !important;
 }
 
+/* 右側の画像エリア全体 */
 .book-right {
-    flex: 1; 
+    flex: 0 0 550px; 
     background: #fdfaf3;
     display: flex; 
     flex-direction: column;
+    /* --- 【ここが肝】1枚の時は上下左右の「ど真ん中」にする --- */
     align-items: center; 
-    justify-content: flex-start;
-    padding: 20px;
+    justify-content: center; 
+    padding: 30px;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
 }
 
 .book-left {
@@ -248,26 +253,43 @@ body {
 /* --- モーダル内の画像エリア（基本：1枚のとき） --- */
 #modalPhoto {
     width: 100%; 
-    height: 85%; /* 1枚のときはエリアを広く取る */
+    height: 400px;
     display: flex; 
     align-items: center; 
     justify-content: center;
-    margin-top: 20px;
-    transition: all 0.3s ease; /* レイアウト変更を滑らかに */
+    /* 1枚の時は余計なマージンを消して完全中央を維持 */
+    margin: 0; 
 }
 
-/* --- 【重要】複数枚あるときのレイアウト調整 --- */
-/* JSで .has-multiple-thumbs が付いたときだけ適用 */
+#mainModalImg {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* アスペクト比を維持して枠内に収める */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* --- 複数枚ある時（JSでクラスが付与された時）の切り替え --- */
+.has-multiple-thumbs .book-right {
+    /* 複数枚なら「上詰め」に切り替えて、下にサムネイルの場所を空ける */
+    justify-content: flex-start; 
+    padding-top: 50px; /* 少しだけ上からの位置を調整 */
+}
+
 .has-multiple-thumbs #modalPhoto {
-    height: 70%; /* サムネイルのスペースを作るために少し縮める */
-    margin-top: 10px;
+    /* 複数枚の時は画像とサムネイルの間に隙間を作る */
+    margin-bottom: 20px;
 }
 
+/* メイン画像自体の設定（枠の中にどう収まるか） */
 #modalPhoto img { 
-    max-width: 100%; 
-    max-height: 100%; 
-    object-fit: contain; 
-    border-radius: 4px;
+    max-width: 100%;  /* 枠の幅いっぱいに広がる */
+    max-height: 100%; /* 枠の高さいっぱいに広がる */
+    object-fit: contain; /* アスペクト比を崩さず、欠けないように収める */
+    border-radius: 8px;  /* 以前の4pxより少し丸くすると、今のデザインに馴染みます */
+    /* チェキ風に見せるなら、ここに少し影を足すのがおすすめ */
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12)); 
+    transition: transform 0.3s ease; /* 切り替え時にふんわりさせる */
 }
 
 /* --- 新しいアイコン置き場（カード右下に配置） --- */
@@ -340,12 +362,11 @@ body {
 
 /* サムネイルナビゲーションの基本設定 */
 .thumb-nav {
-    display: none; /* JSで複数枚確認できたら flex に変える */
-    gap: 10px; 
-    margin-top: 10px; 
-    height: 60px; 
+    display: none; 
+    gap: 10px;
     justify-content: center;
     width: 100%;
+    height: 70px;
 }
 
 .thumb-nav img {
@@ -372,7 +393,8 @@ body {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+    border-radius: 8px;
+    filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
 }
 
 .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; }
