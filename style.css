@@ -395,7 +395,15 @@ body {
     filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
 }
 
-.close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; }
+.close-modal {
+    position: absolute;
+    top: 10px;    /* 少し内側に下げる */
+    right: 15px;  /* 少し内側に寄せる */
+    font-size: 24px; /* サイズを少し調整 */
+    cursor: pointer;
+    z-index: 5000; /* 他の要素より手前に来るように */
+    color: var(--primary-color); /* 色を馴染ませる */
+}
 
 .status-grid { margin: 0 auto 30px; max-width: 400px; }
 .status-item {
