@@ -11,9 +11,10 @@
 
 * { box-sizing: border-box; }
 body {
-    margin: 0; font-family: 'Noto Sans JP', sans-serif;
-    background-color: var(--bg-color); color: var(--text-main);
-    display: flex; min-height: 100vh;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden; /* 横揺れ防止 */
+    /* overflow-y: hidden; などがあれば削除してください */
 }
 
 /* --- サイドバー --- */
@@ -60,7 +61,13 @@ body {
 .nav-item-sub:hover { opacity: 1; background: rgba(255,255,255,0.6); }
 
 /* --- メインコンテンツ --- */
-#main-content { flex: 1; display: flex; flex-direction: column; }
+#main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* height: 100vh; を削除 */
+    /* overflow-y: auto; を削除 */
+}
 
 /* --- ホーム画面 --- */
 #home-view { max-width: 900px; margin: 40px auto; text-align: center; padding: 0 20px; }
@@ -504,7 +511,7 @@ body {
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* 少し影を柔らかく */
-    z-index: 3000;
+    z-index: 9999;
 
     /* 初期状態：少し下に配置してふわっと浮き上がらせる */
     opacity: 0;
