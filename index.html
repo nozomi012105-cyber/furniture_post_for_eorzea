@@ -56,7 +56,9 @@
 
 <div id="itemModal" class="modal" onclick="closeModal()">
 
-    <div class="modal-nav nav-prev" onclick="changeModalItem(-1)"><i class="fa-solid fa-chevron-left"></i></div>
+    <div class="modal-nav nav-prev" onclick="event.stopPropagation(); changeModalItem(-1)">
+    <i class="fa-solid fa-chevron-left"></i>
+</div>
     
     <div class="book-layout" onclick="event.stopPropagation()">
         <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -93,7 +95,9 @@
             </div>
         </div>
     </div>
-    <div class="modal-nav nav-next" onclick="changeModalItem(1)"><i class="fa-solid fa-chevron-right"></i></div>
+    <div class="modal-nav nav-next" onclick="event.stopPropagation(); changeModalItem(1)">
+    <i class="fa-solid fa-chevron-right"></i>
+</div>
 </div>
 
    
