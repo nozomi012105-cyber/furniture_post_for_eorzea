@@ -1,5 +1,4 @@
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxN4O6KUpVGqOI479BHPivqRv1RccVBhVNyHCC6yKqyiXfH-xX9FLR-3c8uPuYM4MEkSA/exec";
-
 const CATEGORY_ORDER = ["調度品(一般)", "調度品(台座)", "調度品(卓上)", "調度品(壁掛)", "調度品(敷物)", "内装建材", "庭具"];
 const PACKAGE_NAMES = { "7": "黄金のレガシー", "6": "暁月のフィナーレ", "5": "漆黒のヴィランズ", "4": "紅蓮のリベレーター", "3": "蒼天のイシュガルド", "2": "新生エオルゼア" };
 
@@ -12,7 +11,7 @@ let isLoading = false;
 let currentModalIdx = -1;
 
 window.onload = async function() {
-    const CACHE_KEY = 'eorzea_furniture_data_final_v2'; // キーを更新してキャッシュをクリア
+    const CACHE_KEY = 'eorzea_furniture_data_final_v2';
     const cachedData = localStorage.getItem(CACHE_KEY);
 
     if (cachedData) {
@@ -23,15 +22,11 @@ window.onload = async function() {
         try {
             const response = await fetch(GAS_URL);
             let data = await response.json();
-            // スプレッドシートの全データを取得（逆順にして最新を上に）
             let rawData = data.slice(1).reverse();
-            
-            // 画像チェックはせず、IDがあるものだけを有効データとして採用
             allData = rawData.filter(item => {
                 const id = item.ItemID || item['アイテムID'];
                 return id && id.toString().trim() !== "";
             });
-
             localStorage.setItem(CACHE_KEY, JSON.stringify(allData));
             buildMenu();
             buildHome();
@@ -40,7 +35,6 @@ window.onload = async function() {
     showHome();
 };
 
-// --- カタログ描画ロジック ---
 function formatPatch(p) {
     const s = p.toString().replace('Patch', '').trim();
     return `Patch ${s}`;
@@ -51,55 +45,118 @@ function loadMoreItems() {
     isLoading = true;
     const grid = document.getElementById('grid');
     const next = displayList.slice(currentIndex, currentIndex + itemsPerPage);
-    let lastP = (currentIndex > 0) ? formatPatch(displayList[currentIndex-1].patch) : "";
 
     next.forEach(item => {
-    // --- 項目名のズレを吸収する書き方 ---
-    // 染色: 「染色」という項目がなければ「dyeable」を探す
-    const dyeVal = item['染色'] || item.dyeable || item['染色可否'];
-    
-    // マケボ: 「マケボ」がなければ「market」や「マケボ取引」を探す
-    const marketVal = item['マケボ'] || item.market || item['マケボ取引'];
-    
-    // 製作: 「製作」がなければ「recipe」を探す（これは現在出ているので今のままでOK）
-    const craftVal = item['製作'] || item.recipe || item['製作可否'];
-    
-    const itemId = item.ItemID || item['アイテムID'];
-    // ----------------------------------
+        const dyeVal = item['染色'] || item.dyeable || item['染色可否'];
+        const marketVal = item['マケボ'] || item.market || item['マケボ取引'];
+        const craftVal = item['製作'] || item.recipe || item['製作可否'];
+        const itemId = item.ItemID || item['アイテムID'];
 
-    const card = document.createElement('div');
-    card.className = 'cheki-card';
-    
-    card.innerHTML = `
-        <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
-            <img src="images/${itemId}_front.png" 
-                 class="slide-img active" 
-                 onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
-        </div>
-
-        <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
-            
+        const card = document.createElement('div');
+        card.className = 'cheki-card';
+        card.innerHTML = `
+            <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
+                <img src="images/${itemId}_front.png" class="slide-img active" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
+            </div>
+            <p class="item-name">${item['アイテム名（日）'] || item.name}</p>
             <div class="card-flags">
                 ${(dyeVal && dyeVal !== '不可') ? '<div class="flag-diamond flag-dye"><span>🎨</span></div>' : ''}
                 ${(marketVal && marketVal !== '不可') ? '<div class="flag-diamond flag-market"><span>💰</span></div>' : ''}
                 ${(craftVal && craftVal !== '-' && craftVal !== '不可' && craftVal !== '') ? '<div class="flag-diamond flag-craft"><span>🔨</span></div>' : ''}
             </div>
-    `;
-    grid.appendChild(card);
-});
+        `;
+        grid.appendChild(card);
+    });
     currentIndex += itemsPerPage;
     isLoading = false;
 }
 
-// キーボード操作（左右キー対応）
-window.addEventListener('keydown', (e) => {
-    if (!document.getElementById('itemModal').classList.contains('visible')) return;
-    if (e.key === 'ArrowLeft') changeModalItem(-1);
-    else if (e.key === 'ArrowRight') changeModalItem(1);
-    else if (e.key === 'Escape') closeModal();
-});
+async function openModalByIdx(originalIdx) {
+    currentModalIdx = originalIdx;
+    const item = allData[originalIdx];
+    const itemId = item.ItemID || item['アイテムID'];
 
-// --- メニュー・フィルタリングロジック ---
+    document.getElementById('modalTitle').innerText = item['アイテム名（日）'] || item.name;
+    document.getElementById('modalMainCategory').innerText = item.category || "";
+    document.getElementById('modalSubCategory').innerText = item['FF14サブカテゴリー'] || "";
+    document.getElementById('modalDye').innerText = item['dyeable'] || item['染色'] || "不可";
+    document.getElementById('modalMarket').innerText = item['market'] || item['マケボ'] || "不可";
+    document.getElementById('modalCraft').innerText = item['recipe'] || item['製作'] || "-";
+    document.getElementById('modalHowToGet').innerText = item['入手方法'] || "確認中";
+    document.getElementById('modalComment').innerText = item['note'] || "備考はありません";
+
+    const photoArea = document.getElementById('modalPhoto');
+    photoArea.innerHTML = `<img src="images/${itemId}_front.png" id="mainModalImg" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
+
+    // --- 左右切り替えボタンの表示制御 ---
+    const idxInList = displayList.indexOf(item);
+    // 最初のアイテムならPrevを隠す、最後ならNextを隠す
+    document.querySelector('.nav-prev').style.display = (idxInList > 0) ? 'flex' : 'none';
+    document.querySelector('.nav-next').style.display = (idxInList < displayList.length - 1) ? 'flex' : 'none';
+    
+    const bookRight = document.querySelector('.book-right');
+    bookRight.classList.remove('has-multiple-thumbs');
+    let thumbNav = document.querySelector('.thumb-nav') || document.createElement('div');
+    thumbNav.className = 'thumb-nav';
+    if (!thumbNav.parentElement) bookRight.appendChild(thumbNav);
+    thumbNav.innerHTML = '';
+    thumbNav.style.display = 'none';
+
+    const suffixList = ['front', 'side', 'back', 'bottom', 'top', 'dye', 'night'];
+    let foundCount = 0;
+
+    for (const suffix of suffixList) {
+        const imgUrl = `images/${itemId}_${suffix}.png`;
+        const exists = await new Promise(res => {
+            const img = new Image();
+            img.onload = () => res(true);
+            img.onerror = () => res(false);
+            img.src = imgUrl;
+        });
+        if (exists) {
+            foundCount++;
+            const tImg = document.createElement('img');
+            tImg.src = imgUrl;
+            if (suffix === 'front') tImg.className = 'active';
+            tImg.onclick = () => {
+                document.getElementById('mainModalImg').src = imgUrl;
+                document.querySelectorAll('.thumb-nav img').forEach(el => el.classList.remove('active'));
+                tImg.classList.add('active');
+            };
+            thumbNav.appendChild(tImg);
+        }
+    }
+
+    if (foundCount > 1) {
+        bookRight.classList.add('has-multiple-thumbs');
+        thumbNav.style.display = 'flex';
+    }
+
+    document.getElementById('itemModal').classList.add('visible');
+}
+
+function changeModalItem(dir) {
+    const currentItem = allData[currentModalIdx];
+    const idx = displayList.indexOf(currentItem);
+    const nextIdx = idx + dir;
+    if(nextIdx >= 0 && nextIdx < displayList.length) {
+        openModalByIdx(allData.indexOf(displayList[nextIdx]));
+    }
+}
+
+function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
+
+function buildHome() {
+    let cats = [...new Set(allData.map(i => i.category))].filter(Boolean);
+    cats = cats.sort((a,b) => (CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b)));
+    document.getElementById('home-cat-list').innerHTML = cats.map(c => `<div class="cat-card" onclick="filterBy('category', '${c}')"><i class="fa-solid fa-couch"></i><span>${c}</span></div>`).join('');
+}
+
+function showHome() { 
+    document.getElementById('home-view').style.display='block'; 
+    document.getElementById('catalog-view').style.display='none'; 
+}
+
 function buildMenu() {
     let cats = [...new Set(allData.map(i => i.category))].filter(Boolean);
     cats = cats.sort((a,b) => (CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b)));
@@ -182,140 +239,24 @@ function render() {
     loadMoreItems();
 }
 
-// --- モーダルを開くメインの処理 ---
-async function openModalByIdx(originalIdx) {
-    currentModalIdx = originalIdx;
-    const item = allData[originalIdx];
-    const itemId = item.ItemID || item['アイテムID'];
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-    // 1. 基本テキストの設定
-    const titleEl = document.getElementById('modalTitle');
-    const itemName = item['アイテム名（日）'] || item.name;
-    titleEl.innerText = itemName;
-
-    // バッジ・詳細
-    document.getElementById('modalMainCategory').innerText = item.category || "";
-    document.getElementById('modalSubCategory').innerText = item['FF14サブカテゴリー'] || "";
-    document.getElementById('modalDye').innerText = item['dyeable'] || item['染色'] || "不可";
-    document.getElementById('modalMarket').innerText = item['market'] || item['マケボ'] || "不可";
-    document.getElementById('modalCraft').innerText = item['recipe'] || item['製作'] || "-";
-    document.getElementById('modalHowToGet').innerText = item['入手方法'] || "確認中";
-    document.getElementById('modalComment').innerText = item['note'] || "備考はありません";
-
-    // 2. メイン画像の設定
-    const photoArea = document.getElementById('modalPhoto');
-    photoArea.innerHTML = `<img src="images/${itemId}_front.png" id="mainModalImg" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">`;
-
-    // 3. サムネイルの準備
-    const bookRight = document.querySelector('.book-right');
-    bookRight.classList.remove('has-multiple-thumbs');
-    let thumbNav = document.querySelector('.thumb-nav') || document.createElement('div');
-    thumbNav.className = 'thumb-nav';
-    if (!thumbNav.parentElement) bookRight.appendChild(thumbNav);
-    thumbNav.innerHTML = '';
-    thumbNav.style.display = 'none';
-
-    // 4. 画像チェックとカウント（ここが foundCount の定義場所）
-    const suffixList = ['front', 'side', 'back', 'bottom', 'top', 'dye', 'night'];
-    let foundCount = 0;
-
-    for (const suffix of suffixList) {
-        const imgUrl = `images/${itemId}_${suffix}.png`;
-        const exists = await new Promise(res => {
-            const img = new Image();
-            img.onload = () => res(true);
-            img.onerror = () => res(false);
-            img.src = imgUrl;
-        });
-
-        if (exists) {
-            foundCount++;
-            const tImg = document.createElement('img');
-            tImg.src = imgUrl;
-            if (suffix === 'front') tImg.className = 'active';
-            tImg.onclick = () => {
-                document.getElementById('mainModalImg').src = imgUrl;
-                document.querySelectorAll('.thumb-nav img').forEach(el => el.classList.remove('active'));
-                tImg.classList.add('active');
-            };
-            thumbNav.appendChild(tImg);
-        }
-    }
-
-    // 5. 複数枚判定（foundCount を使う）
-    if (foundCount > 1) {
-        bookRight.classList.add('has-multiple-thumbs');
-        thumbNav.style.display = 'flex';
-    }
-
-    // 6. 前後ボタンの制御
-    const currentIdxInDisplay = displayList.indexOf(item);
-    const prevBtn = document.querySelector('.nav-prev');
-    const nextBtn = document.querySelector('.nav-next');
-    if (prevBtn && nextBtn) {
-        prevBtn.style.display = (currentIdxInDisplay > 0) ? "flex" : "none";
-        nextBtn.style.display = (currentIdxInDisplay < displayList.length - 1) ? "flex" : "none";
-    }
-
-    document.getElementById('itemModal').classList.add('visible');
-} // ← 最後にこの閉じカッコがあることを確認！
-
-// 【ここがポイント！】
-    // 画像が2枚以上（front + α）見つかったらクラスを付与
-    if (foundCount > 1) {
-        // 2枚以上ある：クラスを付けて上に上げ、サムネイルを表示する
-        bookRight.classList.add('has-multiple-thumbs');
-        thumbNav.style.display = 'flex'; 
-    } else {
-        // 1枚のみ：サムネイルを非表示にする
-        thumbNav.style.display = 'none';
-    }
-
-function changeModalItem(dir) {
-    const currentItem = allData[currentModalIdx];
-    const idx = displayList.indexOf(currentItem);
-    const nextIdx = idx + dir;
-    if(nextIdx >= 0 && nextIdx < displayList.length) {
-        openModalByIdx(allData.indexOf(displayList[nextIdx]));
-    }
-}
-
-function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
-
-function buildHome() {
-    let cats = [...new Set(allData.map(i => i.category))].filter(Boolean);
-    cats = cats.sort((a,b) => (CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b)));
-    document.getElementById('home-cat-list').innerHTML = cats.map(c => `<div class="cat-card" onclick="filterBy('category', '${c}')"><i class="fa-solid fa-couch"></i><span>${c}</span></div>`).join('');
-}
-
-function showHome() { document.getElementById('home-view').style.display='block'; document.getElementById('catalog-view').style.display='none'; }
-
-window.onscroll = () => {
-    // 無限ロード
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+// スクロールイベントを一つに集約
+window.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop + clientHeight >= scrollHeight - 300) {
         loadMoreItems();
     }
-
-    // TOPボタンの表示切り替え
-    const topBtn = document.getElementById('backToTop');
-    if (topBtn) {
-        if (window.scrollY > 300) {
-            topBtn.classList.add('visible');
-        } else {
-            topBtn.classList.remove('visible');
-        }
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+        if (scrollTop > 300) { backToTop.classList.add('visible'); } 
+        else { backToTop.classList.remove('visible'); }
     }
-};
+});
 
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('open');
-}
-
-// ボタンをクリックした時の動作（念のため）
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
+window.addEventListener('keydown', (e) => {
+    if (!document.getElementById('itemModal').classList.contains('visible')) return;
+    if (e.key === 'ArrowLeft') changeModalItem(-1);
+    else if (e.key === 'ArrowRight') changeModalItem(1);
+    else if (e.key === 'Escape') closeModal();
+});
