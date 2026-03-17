@@ -567,7 +567,7 @@ body {
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* 少し影を柔らかく */
-    z-index: 9999;
+    z-index: 1500;
 
     /* 初期状態：少し下に配置してふわっと浮き上がらせる */
     opacity: 0;
