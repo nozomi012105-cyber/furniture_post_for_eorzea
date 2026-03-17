@@ -28,7 +28,9 @@
         <div id="side-patch-list"></div>
     </div>
 </nav>
-
+    
+/* ------------------------------------------ */
+    
 <main id="main-content">
     <div id="home-view">
         <h1 class="hero-title">Furniture Post for Eorzea</h1>
@@ -52,56 +54,61 @@
     </div>
 </main>
 
-<button id="backToTop" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></button>
+/* ------------------------------------------ */
 
 <div id="itemModal" class="modal" onclick="closeModal()">
 
     <div class="modal-nav nav-prev" onclick="event.stopPropagation(); changeModalItem(-1)">
-    <i class="fa-solid fa-chevron-left"></i>
-</div>
-    
-    <div class="book-layout" onclick="event.stopPropagation()">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        
-        <div class="book-right">
-            <div id="modalPhoto"></div>
-        </div>
-        <div class="book-left">
-            <h2 id="modalTitle" style="margin-top:0; color:var(--primary-color);"></h2>
-
-            <div id="modalCategoryArea" style="margin-bottom: 20px; display: flex; gap: 5px;">
-                <span id="modalMainCategory" class="tag-badge"></span>
-                <span id="modalSubCategory" class="tag-badge"></span>
-            </div>
-
-            <hr class="modal-divider">
-
-            <div class="status-grid">
-                <div class="status-item"><span>染色</span><span id="modalDye"></span></div>
-                <div class="status-item"><span>マケボ取引</span><span id="modalMarket"></span></div>
-                <div class="status-item"><span>製作</span><span id="modalCraft"></span></div>
-            </div>
-
-            <div class="info-section">
-                <h3 class="section-title"><span class="symbol">✦</span> 入手方法 <span class="symbol">✦</span></h3>
-                <div id="modalHowToGet" class="section-content"></div>
-            </div>
-
-            <hr class="modal-divider">
-
-            <div class="info-section">
-                <h3 class="section-title"><span class="symbol">✦</span> 備考 <span class="symbol">✦</span></h3>
-                <div id="modalComment" class="section-content"></div>
-            </div>
-        </div>
+        <i class="fa-solid fa-chevron-left"></i>
     </div>
     <div class="modal-nav nav-next" onclick="event.stopPropagation(); changeModalItem(1)">
-    <i class="fa-solid fa-chevron-right"></i>
-</div>
-</div>
-
-   
+        <i class="fa-solid fa-chevron-right"></i>
+    </div>
     
+ /* ------------------------------------------ */
+    
+        <div class="book-layout" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="book-right">
+                <div id="modalPhoto"></div>
+            </div>
+            <div class="book-left">
+        <h2 id="modalTitle" style="margin-top:0; color:var(--primary-color);"></h2>
+
+        <div id="modalCategoryArea" style="margin-bottom: 20px; display: flex; gap: 5px;">
+            <span id="modalMainCategory" class="tag-badge"></span>
+            <span id="modalSubCategory" class="tag-badge"></span>
+        </div>
+
+        <hr class="modal-divider">
+
+        <div class="status-grid">
+            <div class="status-item"><span>染色</span><span id="modalDye"></span></div>
+            <div class="status-item"><span>マケボ取引</span><span id="modalMarket"></span></div>
+            <div class="status-item"><span>製作</span><span id="modalCraft"></span></div>
+        </div>
+
+        <div class="info-section">
+            <h3 class="section-title">
+            <span class="symbol">✦</span> 入手方法 <span class="symbol">✦</span>
+        </h3>
+            <div id="modalHowToGet" class="section-content"></div>
+        </div>
+
+        <hr class="modal-divider">
+
+        <div class="info-section">
+            <h3 class="section-title">
+            <span class="symbol">✦</span> 備考 <span class="symbol">✦</span>
+        </h3>
+            <div id="modalComment" class="section-content"></div>
+        </div>
+    </div> </div> </div>
+
+ /* ------------------------------------------ */
+
 <script src="script.js"></script>
+    
+    <div id="backToTop" onclick="scrollToTop()"><i class="fa-solid fa-chevron-up"></i></div>
 </body>
 </html>
