@@ -151,7 +151,6 @@ body {
 }
 
 .book-layout {
-    position: relative;
     display: flex;
     flex-direction: row; /* 横並びを強制 */
     width: 95vw;
@@ -162,28 +161,32 @@ body {
     overflow: hidden;
 }
 
+/* --- 前後ボタンの基本設定 --- */
 .modal-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     width: 50px;
     height: 50px;
-    background: rgba(125, 107, 93, 0.5);
-    color: white;
+    background: rgba(255, 255, 255, 0.15); /* 普段は極めて薄く */
+    color: rgba(255, 255, 255, 0.5);       /* 矢印も控えめに */
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: 0.3s;
-    font-size: 1.5rem;
-    z-index: 4000;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 5000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* 滑らかな動き */
 }
 
+/* --- マウスホバー時の設定（目に優しく、でも分かりやすく） --- */
 .modal-nav:hover {
-    background: var(--primary-color);
-    transform: translateY(-50%) scale(1.1);
+    background: rgba(255, 255, 255, 0.8);  /* ふわっと白く浮き上がる */
+    color: #6670b0;                        /* アイコンにメイン色を灯す */
+    transform: translateY(-50%) scale(1.1); /* わずかに大きくして「押せる感」を出す */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 /* --- デフォルト（広い画面）の設定：モーダルのすぐ外側 --- */
@@ -194,20 +197,29 @@ body {
     right: -60px; 
 }
 
-/* --- 画面が狭くなった時（1200px以下）の設定：モーダルの内側へ --- */
-@media (max-width: 1200px) {
+/* --- 広い画面（1201px以上）：モーダルの外側に配置 --- */
+@media (min-width: 1201px) {
     .nav-prev { 
-        left: 10px; 
-        background: rgba(255, 255, 255, 0.6); /* 内側で見えやすいように白っぽく */
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        left: calc(50% - 500px - 80px); /* 500px(モーダル半分) + 80px(余白) */
     }
     .nav-next { 
-        right: 10px; 
-        background: rgba(255, 255, 255, 0.6);
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        right: calc(50% - 500px - 80px); 
+    }
+}
+
+/* --- 狭い画面（1200px以下）：モーダルの内側へシュッと入る --- */
+@media (max-width: 1200px) {
+    .nav-prev { 
+        left: 20px; 
+    }
+    .nav-next { 
+        right: 20px; 
     }
     .modal-nav {
-        color: var(--primary-color); /* アイコンの色を濃くして視認性アップ */
+        /* 内側に入った時は、背景が白っぽいので少しだけ視認性を上げる */
+        background: rgba(255, 255, 255, 0.4);
+        color: var(--primary-color);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 }
 
@@ -246,24 +258,26 @@ body {
 /* 右側の画像エリア全体 */
 .book-right {
     flex: 1; 
-    width: 50%;
+    min-width: 0;
     background: #fdfaf3;
     display: flex; 
     flex-direction: column;
     /* --- 【ここが肝】1枚の時は上下左右の「ど真ん中」にする --- */
     align-items: center; 
     justify-content: center; 
-    padding: 30px;
+    padding: 20px;
     border-right: 1px solid rgba(0,0,0,0.05);
     transition: all 0.3s ease;
 }
 
 .book-left {
     flex: 1;
-    width: 50%;
+    min-width: 0;
     padding: 40px 30px;
     overflow-y: auto;
     border-left: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
 }
 
 /* --- モーダル内の画像エリア（基本：1枚のとき） --- */
@@ -454,11 +468,19 @@ body {
     text-align: center;
 }
 
+/* 【重要】画面が狭いとき（スマホなど）の調整 */
 @media (max-width: 768px) {
-    #sidebar { display: none; }
-    .sticky-header { padding: 15px 20px 5px; }
-    .content-body { padding: 20px; }
-    .book-layout { flex-direction: column; height: auto; max-height: 90vh; }
+    .book-layout {
+        flex-direction: column; /* 縦並びに切り替え */
+        height: 90vh;
+    }
+    .book-right, .book-left {
+        width: 100%; /* 横幅いっぱいにする */
+        flex: none;
+    }
+    .book-right {
+        height: 40%; /* 画像エリアの高さを抑える */
+    }
 }
 
 #backToTop {
