@@ -282,7 +282,6 @@ body {
     max-height: 100%;
     object-fit: contain; /* アスペクト比を維持して枠内に収める */
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 /* --- 複数枚ある時（JSでクラスが付与された時）の切り替え --- */
