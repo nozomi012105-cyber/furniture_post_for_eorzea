@@ -462,29 +462,51 @@ body {
     transform: scale(1.1);
 }
 
-.status-grid { margin: 0 auto 30px; max-width: 400px; }
+.status-grid {
+    margin: 0 auto 30px; /* 上下0、左右autoで中央寄せ */
+    max-width: 400px;    /* 画像の雰囲気に合わせてギュッと絞ります */
+    width: 100%;
+}
 .status-item {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px dashed #ccc;
-    padding: 10px 10px;
+    padding: 10px 5px;   /* 左右のパディングを少し調整 */
     font-size: 1rem;
     color: #555;
 }
-.status-item span:last-child { font-weight: bold; color: #333; }
+/* 「染色」「製作」などのラベル部分の幅を固定して揃える */
+.status-item span:last-child {
+    font-weight: bold;
+    color: #333;
+}
 
-.section-title { text-align: center; font-size: 0.95rem; color: var(--primary-color); margin: 20px 0 10px; }
-.section-content { text-align: center; font-size: 0.9rem; line-height: 1.6; color: #555; white-space: pre-wrap; }
+.section-title {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--primary-color);
+    margin: 20px 0 10px;
+    display: block; /* 確実に一行占有させる */
+}
+.section-content {
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 5px;
+}
+/* --- 3. 区切り線（hr）の余白調整 --- */
 .modal-divider {
     border: none;
     height: 1px;
     background-image: linear-gradient(to right, #ccc 50%, rgba(255,255,255,0) 0%);
     background-position: bottom;
-    background-size: 4px 1px;
+    background-size: 4px 1px; /* 点線の間隔 */
     background-repeat: repeat-x;
     margin: 25px auto;
-    width: 80%;
+    width: 80%; /* 線を短くして中央寄せ */
 }
+
 .symbol { color: rgb(160, 179, 104); margin: 0 8px; font-size: 1.1rem; }
 
 /* サイドバーのアイコンとテキストの間に余白を追加 */
