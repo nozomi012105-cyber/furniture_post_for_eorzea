@@ -1,4 +1,4 @@
-:root {
+    :root {
     --bg-color: #fdfaf3;
     --sidebar-bg: #f0e1bd;
     --primary-color: #7d6b5d;
@@ -17,7 +17,7 @@ body {
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
-    overflow-x: hidden; /* 横揺れ防止 */
+    overflow-y: visible; /* 横揺れ防止 */
 }
 
 /* --- サイドバー --- */
@@ -202,13 +202,9 @@ body {
 }
 
 /* --- デフォルト（広い画面）の設定：モーダルのすぐ外側 --- */
-.nav-prev { 
-    left: -60px; 
-}
-.nav-next { 
-    right: -60px; 
-}
-
+.nav-prev { left: -80px; }
+.nav-next { right: -80px; }
+        
 /* --- 広い画面（1201px以上）：モーダルの外側に配置 --- */
 @media (min-width: 1201px) {
     .nav-prev { 
@@ -439,12 +435,12 @@ body {
 /* 2. ×ボタンの設定 */
 .close-modal {
     position: absolute; /* .book-layout の中での位置を指定 */
-    top: 15px;    /* 枠の上から15px */
+    top: 10px;    /* 枠の上から15px */
     right: 15px;   /* 枠の右から15px */
     
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.7); /* 画像に重なっても見やすいように */
+    
     color: var(--primary-color);
     border-radius: 50%;
     display: flex;
@@ -454,19 +450,21 @@ body {
     z-index: 100; /* 本の中身より上に表示 */
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid rgba(0,0,0,0.05); /* ほんの少し縁取り */
+    
 }
 
 .close-modal:hover {
-    background: #ffffff;
+    background: #fdfaf3;
     transform: scale(1.1);
 }
 
+/* --- 1. 染色・マケボ・製作のグリッド調整 --- */
 .status-grid {
     margin: 0 auto 30px; /* 上下0、左右autoで中央寄せ */
     max-width: 400px;    /* 画像の雰囲気に合わせてギュッと絞ります */
     width: 100%;
 }
+        
 .status-item {
     display: flex;
     justify-content: space-between;
@@ -475,12 +473,14 @@ body {
     font-size: 1rem;
     color: #555;
 }
+        
 /* 「染色」「製作」などのラベル部分の幅を固定して揃える */
 .status-item span:last-child {
     font-weight: bold;
     color: #333;
 }
 
+/* --- 2. 入手方法・備考のフォントサイズ調整 --- */
 .section-title {
     text-align: center;
     font-size: 0.95rem;
@@ -506,7 +506,7 @@ body {
     margin: 25px auto;
     width: 80%; /* 線を短くして中央寄せ */
 }
-
+        
 .symbol { color: rgb(160, 179, 104); margin: 0 8px; font-size: 1.1rem; }
 
 /* サイドバーのアイコンとテキストの間に余白を追加 */
