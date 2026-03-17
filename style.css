@@ -331,10 +331,10 @@ body {
 .card-flags {
     display: flex;
     justify-content: flex-end; /* 右寄せ */
-    gap: 3px;                 /* アイコン同士をキュッと詰める */
+    gap: 0px;                 /* アイコン同士をキュッと詰める */
     margin-top: auto;         /* 名前の長さに関わらず下の方に配置 */
-    padding-right: 4px;       /* 右に少し余裕をもたせる */
-    padding-bottom: 2px;      /* 下に少し余裕をもたせる */
+    padding-right: 0px;       /* 右に少し余裕をもたせる */
+    padding-top: 1px;      /* 下に少し余裕をもたせる */
 }
 
 /* --- ひし形の設定（サイズ・色・形は前回のまま） --- */
@@ -359,12 +359,15 @@ body {
     transform: rotate(-45deg); 
     font-size: 9px;
     line-height: 1;
+    position: relative;
+    top: -1.2px;  /* 数値を入れると上下に微細に動かせます */
+    left: -1.5px; /* 数値を入れると左右に微細に動かせます */
 }
 
 /* --- 中の絵文字をまっすぐに戻す（サイズ調整） --- */
 .flag-diamond span {
     transform: rotate(-45deg); 
-    font-size: 9px; /* ★追加：絵文字を少し小さく（10px→9px） */
+    font-size: 13px; /* ★追加：絵文字を少し小さく（10px→9px） */
     line-height: 1;
 }
 
