@@ -287,8 +287,6 @@ body {
     max-height: 100%; /* 枠の高さいっぱいに広がる */
     object-fit: contain; /* アスペクト比を崩さず、欠けないように収める */
     border-radius: 8px;  /* 以前の4pxより少し丸くすると、今のデザインに馴染みます */
-    /* チェキ風に見せるなら、ここに少し影を足すのがおすすめ */
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12)); 
     transition: transform 0.3s ease; /* 切り替え時にふんわりさせる */
 }
 
