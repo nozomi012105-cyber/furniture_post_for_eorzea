@@ -52,27 +52,6 @@ function formatPatch(p) {
     return `Patch ${s}`;
 }
 
-function sortCategories(cats) {
-        return cats.sort((a, b) => {
-            let indexA = CATEGORY_ORDER.indexOf(a);
-            let indexB = CATEGORY_ORDER.indexOf(b);
-            if (indexA === -1) indexA = 999;
-            if (indexB === -1) indexB = 999;
-            return indexA - indexB;
-        });
-    }
-
-function sortSubCategories(subs) {
-        return subs.sort((a, b) => {
-            let indexA = SUB_CATEGORY_ORDER.indexOf(a);
-            let indexB = SUB_CATEGORY_ORDER.indexOf(b);
-            if (indexA === -1) indexA = 999;
-            if (indexB === -1) indexB = 999;
-            if (indexA === indexB) return a.localeCompare(b, 'ja');
-            return indexA - indexB;
-        });
-    }
-
 function loadMoreItems() {
     if (isLoading || currentIndex >= displayList.length) return;
     isLoading = true;
