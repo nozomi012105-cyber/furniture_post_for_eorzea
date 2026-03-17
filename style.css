@@ -426,16 +426,21 @@ body {
 
 .close-modal {
     position: absolute;
-    top: 20px;    /* 上から20px */
-    right: 20px;   /* 右から20px */
-    font-size: 24px;
+    top: 15px;    /* 少し内側に寄せる */
+    right: 15px;   /* 少し内側に寄せる */
+    font-size: 30px;
     line-height: 1;
     cursor: pointer;
-    color: #666;   /* 目立ちすぎず、でも見つけやすい色 */
-    z-index: 100;  /* テキストなどと重なっても一番上に */
-    transition: color 0.2s;
+    color: #666;
+    z-index: 10000; /* 何よりも上にくるように */
+    background: rgba(255, 255, 255, 0.5); /* 背景色を少し入れると見つけやすい */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
-
 .status-grid { margin: 0 auto 30px; max-width: 400px; }
 .status-item {
     display: flex;
