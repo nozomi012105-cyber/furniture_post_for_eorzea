@@ -28,6 +28,15 @@ const itemsPerPage = 24;
 let isLoading = false;
 let currentModalIdx = -1;
 
+// 検索用の正規化（ひらがな化、中点・スペース除去）
+function normalizeText(str) {
+    if (!str) return "";
+    return str
+        .replace(/[ァ-ヶ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0x60)) // カタカナをひらがなに
+        .replace(/[・\s　]/g, "") // 中点とスペースを完全に消去
+        .toLowerCase(); // 英字を小文字に
+}
+
 window.onload = async function() {
     const CACHE_KEY = 'eorzea_furniture_data_final_v2';
     const cachedData = localStorage.getItem(CACHE_KEY);
@@ -269,15 +278,58 @@ function render() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
     currentIndex = 0;
+
+    // 表示すべき全データのリストを作成
     displayList = allData.filter(item => {
-        const itemP = item.patch.toString().replace('Patch','').trim();
-        const filV = currentFilter.value.toString().replace('Patch','').trim();
-        if(currentFilter.type === 'category') return item.category === currentFilter.value && (currentFilter.subValue === 'all' || item['FF14サブカテゴリー'] === currentFilter.subValue);
-        if(currentFilter.type === 'patch-group') return itemP.startsWith(filV + '.');
-        if(currentFilter.type === 'patch') return itemP === filV || itemP.startsWith(filV + '.');
-        return true;
+        // 【修正ポイント】検索モードの場合のロジック
+        if (currentFilter.type === 'search') {
+            const sKey = normalizeText(currentFilter.value); // 入力文字を整える
+            const itemName = normalizeText(item['アイテム名（日）'] || item.name || ""); // 家具名を整える
+            return itemName.includes(sKey); // 部分一致で判定
+        }
+        
+        // 通常のカテゴリ・パッチフィルター（既存のまま）
+        const matchMain = (currentFilter.type === 'category' ? item.category === currentFilter.value : 
+                          currentFilter.type === 'patch' ? item.patch.toString() === currentFilter.value.toString() : true);
+        const matchSub = (currentFilter.subValue === 'all' || item['FF14サブカテゴリー'] === currentFilter.subValue);
+        return matchMain && matchSub;
     });
-    loadMoreItems();
+
+    loadMoreItems(); // 最初の24件を表示
+}
+
+function setSubFilter(val, el) {
+        currentFilter.subValue = val;
+        document.querySelectorAll('.tag-chip').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        render();
+    }
+
+function handleSearch(e) {
+    // Enterキーが押された時だけ実行
+    if (e.key === 'Enter') {
+        const val = e.target.value.trim();
+        if (!val) return; // 空欄なら何もしない
+
+        // 1. フィルター状態を「検索モード」にする
+        currentFilter = { type: 'search', value: val, subValue: 'all' };
+
+        // 2. 画面の表示切り替え（ここが重要！）
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('catalog-view').style.display = 'block';
+        
+        // 3. タイトルを「検索結果: 〇〇」に変更
+        document.getElementById('view-title').innerText = `検索結果: ${val}`;
+        
+        // 4. カテゴリ用タグエリアを一旦空にする（検索結果画面の見た目用）
+        document.getElementById('tag-area').innerHTML = '';
+
+        // 5. 描画を実行
+        render();
+        
+        // 6. 画面の一番上へスクロール
+        window.scrollTo(0, 0);
+    }
 }
 
 function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
