@@ -111,7 +111,7 @@ function loadMoreItems() {
         card.innerHTML = `
             ${newBadge}
             <div class="photo-area" onclick="openModalByIdx(${allData.indexOf(item)})">
-                <img src="images/${itemId}_front.png" class="slide-img active" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
+                <img src="images/${itemId}_front.webp" class="slide-img active" onerror="this.src='https://placehold.jp/200x200?text=NoImage'">
             </div>
             <p class="item-name">${item['アイテム名（日）'] || item.name || '名称不明'}</p>
             <div class="card-flags">
