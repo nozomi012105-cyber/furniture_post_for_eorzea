@@ -381,7 +381,7 @@ body {
 
 /* 3. 製作可能 (紫〜紺) ← 色はそのまま */
 .flag-craft {
-    background: linear-gradient(135deg, #7644ac, #252a60);
+    background: linear-gradient(135deg, #4e425c, #2b2d3b);
 }
 
 .flag-battle {
