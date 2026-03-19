@@ -357,8 +357,8 @@ body {
 
 /* ダイヤモンド型の枠の中の画像を調整 */
 .flag-diamond img {
-    width: 14px;      /* アイコンのサイズ（枠に合わせて調整） */
-    height: 14px;
+    width: 15px;      /* アイコンのサイズ（枠に合わせて調整） */
+    height: 15px;
     object-fit: contain;
     /* 親要素が45度傾いているので、画像だけ-45度戻して「まっすぐ」に見せる */
     
