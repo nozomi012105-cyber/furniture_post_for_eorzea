@@ -365,14 +365,17 @@ body {
     
     /* 位置の微調整用（画像がズレて見える場合に使用） */
     position: relative;
-    top: -2px; 
-    left: 0px;
+    top: -1px; 
+    left: 1px;
 }
 
 /* 1. 染色可能 (水色〜濃い水色) ← ★色を変更しました */
 .flag-dye {
     background: linear-gradient(135deg, #a0f0ff, #0099cc); /* 爽やかな水色のグラデーション */
 }
+.flag-dye img {
+    width: 16px;      /* アイコンのサイズ（枠に合わせて調整） */
+    height: 16px;
 
 /* 2. マケボ可能 (黄緑〜緑) ← 色はそのまま */
 .flag-market {
