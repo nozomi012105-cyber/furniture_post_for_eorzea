@@ -99,7 +99,7 @@ function loadMoreItems() {
         const marketVal = item['マケボ'] || item.market || item['マケボ取引'];
         const craftVal = item['製作'] || item.recipe || item['製作可否'];
         const shopVal = item['NPCショップ'] || item.shop; 
-        const battleVal = item['バトルコンテンツ等'] || item.battle;
+        const battleVal = item['バトルコンテンツ'] || item.battle;
         const retainerVal = item['リテイナー'] || item.retainer;
         const voyageVal = item['潜水艦'] || item.voyage;
         const itemId = item.ItemID || item['アイテムID'];
