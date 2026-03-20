@@ -63,8 +63,19 @@ body {
 }
 
 .nav-item-parent:hover { background: rgba(255,255,255,0.4); }
-.sub-menu { display: none; padding-left: 15px; margin-top: 5px; }
-.sub-menu.open { display: block; }
+.sub-menu {
+    /* 1. 「ぬるっ」と動かす魔法の呪文 */
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 2. 最初は高さを0にして隠す（display: noneはダメ！） */
+    max-height: 0; 
+    /* 3. はみ出た中身を隠す（絶対に必要です！） */
+    overflow: hidden; 
+}
+.sub-menu.open {
+    /* 4. 開いた時の高さを「十分に大きな数値」にする */
+    /* アイテムの数に合わせて自動で止まります */
+    max-height: 1000px; 
+}
 .nav-item-sub {
     display: block; width: 100%; padding: 6px 25px; border: none; background: none;
     text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.8rem;
