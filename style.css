@@ -389,8 +389,7 @@ body {
 .flag-craft img {
     width: 18px;      /* アイコンのサイズ（枠に合わせて調整） */
     height: 18px;
-}
-position: relative;
+    position: relative;
     top: -2px; 
     left: -1px;
 }
