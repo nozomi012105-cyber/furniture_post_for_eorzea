@@ -1,8 +1,8 @@
     :root {
-    --bg-color: #fdfaf3;
+    --bg-color: #fdfaf3; /* 背景色 */
     --sidebar-bg: #f0e1bd;
-    --primary-color: #7d6b5d;
-    --text-main: #231e1a;
+    --primary-color: #7d6b5d;　/* タイトルとか */
+    --text-main: #231e1a;　/* 文字色 */
     --card-bg: #f5f5f5;
     --card-hover-bg: #ffffff;
     --shadow: 0 8px 18px rgba(90, 70, 50, 0.15);
@@ -31,18 +31,27 @@ body {
 .nav-label { font-size: 0.75rem; font-weight: bold; color: rgba(125,107,93,0.6); margin-bottom: 10px; display: block; border-bottom: 1px solid rgba(0,0,0,0.05); }
 
 .nav-item-parent {
-    display: flex; justify-content: space-between; align-items: center;
-    width: 100%; padding: 10px; border: none; background: none;
-    text-align: left; cursor: pointer; border-radius: 8px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    
+    /* --- ここを修正 --- */
+    padding: 10px 0; /* 上下は10px、左右（左端）は0にする */
+    /* ------------------ */
+    
+    border: none; 
+    background: none;
+    text-align: left; 
+    cursor: pointer; 
+    border-radius: 8px;
 
-    /* --- 修正ポイント：一行に収めるための設定 --- */
-    font-size: 0.85rem;         /* 0.9remから微調整（収まりを良くする） */
-    white-space: nowrap;       /* 絶対に改行させない */
-    overflow: hidden;          /* はみ出しを隠す */
-    letter-spacing: -0.3px;    /* ほんの少し文字間を詰めて余白を確保 */
-    /* -------------------------------------- */
-
-    color: var(--primary-color); transition: 0.2s;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: -0.3px;
+    color: var(--primary-color); 
+    transition: 0.2s;
 }
 
 .nav-item-parent span {
@@ -57,7 +66,7 @@ body {
 .sub-menu { display: none; padding-left: 15px; margin-top: 5px; }
 .sub-menu.open { display: block; }
 .nav-item-sub {
-    display: block; width: 100%; padding: 6px 10px; border: none; background: none;
+    display: block; width: 100%; padding: 6px 25px; border: none; background: none;
     text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.8rem;
     color: var(--text-main); opacity: 0.8;
 }
@@ -610,6 +619,7 @@ body {
 
 /* サイドバーのアイコンとテキストの間に余白を追加 */
 .nav-item-parent span i {
+    margin-left: 0;   /* 左端に寄せる */
     margin-right: 8px;
     width: 1.2em;
     text-align: center;
