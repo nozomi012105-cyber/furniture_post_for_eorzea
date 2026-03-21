@@ -20,6 +20,31 @@ body {
     overflow-y: visible; /* 横揺れ防止 */
 }
 
+/* タイトル全体の基本設定 */
+h1 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 2.5rem;
+    color: #5c4f45; /* 基本は墨色 */
+    text-align: center;
+    letter-spacing: 0.12em;
+    /* ★ここを追加！ */
+    width: 100%;       /* 横幅いっぱいに広がる許可を出す */
+    max-width: none;    /* 変な制限を解除 */
+    display: block;     /* 独立したブロックにする */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 「P」だけを茜色にする魔法 */
+.accent-p {
+    color: #a32127; /* 茜色（日本の伝統的な赤） */
+    font-weight: bold; /* 少しだけ強調してもオシャレ */
+    /* もし落款（ハンコ）っぽくするなら、ほんの少し傾けても面白いです */
+    display: inline-block;
+    transform: rotate(-10deg); 
+    margin-right: -2px; /* 傾けた分、隙間を微調整 */
+}
+
 /* --- サイドバー --- */
 #sidebar {
     width: 260px; background-color: var(--sidebar-bg);
@@ -108,7 +133,10 @@ body {
 .cat-card {
     display: flex; background: white; padding: 25px 15px; border-radius: 15px; flex-direction: column;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09); cursor: pointer; transition: 0.3s; text-align: center;
-    gap: 7px;
+    gap: 3px;
+    width: 150px;
+    flex: 0 0 auto;
+    margin: 1px ;
 }
 .cat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 
