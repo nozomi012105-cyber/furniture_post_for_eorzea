@@ -210,10 +210,33 @@ function changeModalItem(dir) {
 function closeModal() { document.getElementById('itemModal').classList.remove('visible'); }
 
 function buildHome() {
+    // 1. Nozomi選定：和モダン・アイコン対応表
+    const categoryIcons = {
+        "内装建材": "meeting_room",
+        "調度品(一般)": "chair",
+        "調度品(台座)": "table_bar",
+        "調度品(卓上)": "interests",
+        "調度品(壁掛)": "wall_lamp",
+        "調度品(敷物)": "width_full",
+        "絵画": "manga",
+        "庭具": "forest",
+        "花": "local_florist"
+    };
+
     let cats = [...new Set(allData.map(i => i.category))].filter(Boolean);
     cats = cats.sort((a,b) => (CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b)));
-    document.getElementById('home-cat-list').innerHTML = cats.map(c => `<div class="cat-card" onclick="filterBy('category', '${c}')"><i class="fa-solid fa-couch"></i><span>${c}</span></div>`).join('');
+
+    // 2. HTML生成：アイコンを「上」、文字を「下」に配置
+    document.getElementById('home-cat-list').innerHTML = cats.map(c => {
+        const iconName = categoryIcons[c] || "inventory_2";
+        return `
+            <div class="cat-card" onclick="filterBy('category', '${c}')">
+                <span class="material-symbols-rounded">${iconName}</span>
+                <span class="cat-name">${c}</span>
+            </div>`;
+    }).join('');
 }
+
 
 function showHome() { 
     document.getElementById('home-view').style.display='block'; 
