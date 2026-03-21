@@ -98,15 +98,18 @@ function loadMoreItems() {
 
     next.forEach(item => {
         const itemPatch = (item.patch || item['パッチ'] || "").toString().trim();
+
         // 【追加！】前のアイテムとパッチが違ったら、見出し（セパレーター）を差し込む
-        if (itemPatch !== lastRenderedPatch) {
-            const separator = document.createElement('div');
-            separator.className = 'patch-separator';
-            separator.innerHTML = `<span>|| Patch ${itemPatch}</span>`;
-            grid.appendChild(separator);
-            
-            lastRenderedPatch = itemPatch; // 記録を更新
-        }
+        const isPatchFilter = (currentFilter.type === 'patch' || currentFilter.type === 'patch-group');
+
+        if (isPatchFilter && itemPatch !== lastRenderedPatch) {
+        const separator = document.createElement('div');
+        separator.className = 'patch-separator';
+        separator.innerHTML = `<span>|| Patch ${itemPatch}</span>`;
+        grid.appendChild(separator);
+        
+        lastRenderedPatch = itemPatch;
+    }
 
         // --- ここからカード作成（既存のロジック） ---
         const dyeVal = item['染色'] || item.dyeable || item['染色可否'];
