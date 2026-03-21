@@ -416,14 +416,18 @@ window.addEventListener('keydown', (e) => {
 fetch('https://script.google.com/macros/s/AKfycbwQxlFPFKuE2zYda8BBdt0hPyfrqlUzI2xUrc1Ui_lbyHlrQtyWlL7oUfTtW8OPpcr61Q/exec')
     .then(res => res.json())
     .then(data => {
-        // 1. まずチェックが入っているものだけを抜き出す
-        allData = data.filter(item => {
+        // 1. 画像UP済みが TRUE のものだけを抜き出す
+        // data.slice(1) を入れることでスプシの見出し行を除外します
+        let rawData = data.slice(1).reverse(); 
+        allData = rawData.filter(item => {
             return item['画像UP済み'] === true || item['画像UP済み'] === "TRUE";
         });
 
-        // 2. 【ここを追加！】データの順番を逆（降順）にする
-        allData.reverse(); 
-
-        // 3. 表示処理へ
-        displayInitialItems(); 
+        // 2. メニューとHome画面を構築する（ここが正解！）
+        buildMenu();
+        buildHome();
+        showHome(); 
+    })
+    .catch(e => {
+        console.error("データ取得エラー:", e);
     });
