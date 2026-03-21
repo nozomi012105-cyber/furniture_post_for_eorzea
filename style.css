@@ -95,11 +95,11 @@ body {
 
 /* --- ホーム画面 --- */
 #home-view { max-width: 900px; margin: 40px auto; text-align: center; padding: 0 20px; }
-.hero-title { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 40px; }
-.search-box { max-width: 600px; margin: 0 auto 50px; }
+.hero-title { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 25px; }
+.search-box { max-width: 600px; margin: 0 auto 40px; }
 .search-box input {
-    width: 100%; padding: 18px 30px; border-radius: 35px;
-    border: 2px solid var(--sidebar-bg); font-size: 1.1rem; outline: none;
+    width: 100%; padding: 13px 19px; border-radius: 35px;
+    border: 2px solid var(--sidebar-bg); font-size: 1rem; outline: none;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
