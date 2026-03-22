@@ -690,21 +690,6 @@ h1 {
     text-align: center;
 }
 
-/* 【重要】画面が狭いとき（スマホなど）の調整 */
-@media (max-width: 768px) {
-    .book-layout {
-        flex-direction: column; /* 縦並びに切り替え */
-        height: 90vh;
-    }
-    .book-right, .book-left {
-        width: 100%; /* 横幅いっぱいにする */
-        flex: none;
-    }
-    .book-right {
-        height: 40%; /* 画像エリアの高さを抑える */
-    }
-}
-
 #backToTop {
     position: fixed;
     bottom: 30px;
@@ -781,4 +766,117 @@ h1 {
     display: inline-block;
     padding: 2px 0px;
     border-radius: 4px;
+}
+
+/* ============================================================
+   スマホ・タブレット用 (768px以下) 最終調整
+   ============================================================ */
+@media (max-width: 768px) {
+    /* --- 1. 全体 & サイドバー挙動 --- */
+    body { display: block !important; }
+    #main-content { margin-left: 0 !important; width: 100% !important; padding-top: 70px !important; }
+    
+    #menu-toggle { display: flex !important; }
+    #sidebar {
+        position: fixed !important; top: 0; left: -260px !important;
+        width: 260px !important; height: 100vh !important;
+        z-index: 5000 !important; transition: transform 0.3s ease !important;
+        display: block !important; /* ←【修正】ここをblockに */
+    }
+    #sidebar.active { transform: translateX(260px) !important; }
+    
+    /* サイドバーの背景暗転 */
+    #sidebar-overlay.active {
+        display: block !important;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5); z-index: 4000;
+    }
+
+    /* サイドバー内の閉じボタン（バツ印を消してデザイン復元） */
+    .sidebar-mobile-header {
+        display: flex !important;
+        justify-content: flex-end; /* 右寄せ */
+        padding: 10px;
+    }
+    #menu-close {
+        display: block !important;
+        background: none !important;
+        border: none !important;
+        color: var(--primary-color);
+        font-size: 1.8rem;
+        cursor: pointer;
+    }
+
+    /* --- 2. カタロググリッド (2列表示の復活) --- */
+    #grid {
+        display: grid !important; /* ←【修正】gridを強制 */
+        grid-template-columns: repeat(2, 1fr) !important; /* ← 2列固定 */
+        gap: 12px !important;
+        padding: 10px !important;
+        width: 100% !important;
+    }
+
+    /* --- 3. モーダル本体 (book-layout) 縦並び & スクロール --- */
+    .book-layout {
+        flex-direction: column !important; 
+        height: 85vh !important;
+        width: 95vw !important;
+        overflow: hidden !important;
+        display: flex !important;
+        position: relative !important;
+    }
+
+    /* 画像エリア (上) */
+    .book-right {
+        width: 100% !important;
+        height: 250px !important; 
+        flex: 0 0 auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+    }
+
+    /* テキストエリア (下・確定済みスクロール設定) */
+    .book-left {
+        width: 100% !important;
+        flex: 1 1 auto !important; 
+        overflow-y: auto !important; 
+        padding: 20px !important;
+        display: block !important;
+        background: var(--bg-color) !important;
+    }
+
+    /* --- 4. 左右切り替えボタン (位置を画面左右に固定) --- */
+    .modal-nav {
+        position: absolute !important;
+        top: 125px !important; /* 画像エリアの中央 */
+        width: 44px !important;
+        height: 44px !important;
+        background: rgba(255, 255, 255, 0.8) !important;
+        border-radius: 50% !important;
+        z-index: 6000 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .nav-prev { left: 10px !important; }
+    .nav-next { right: 10px !important; }
+
+    /* 閉じボタン (×) */
+    .close-modal {
+        top: 10px !important;
+        right: 10px !important;
+        z-index: 6100;
+        background: rgba(255, 255, 255, 0.6) !important;
+        border-radius: 50%;
+    }
+}
+
+/* PC版 (769px以上) で不要な要素を隠す */
+@media (min-width: 769px) {
+    #menu-toggle, #sidebar-overlay, .sidebar-mobile-header { display: none !important; }
 }
