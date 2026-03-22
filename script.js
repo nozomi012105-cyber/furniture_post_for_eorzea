@@ -553,3 +553,31 @@ document.addEventListener('click', (e) => {
         toggleSidebar();
     }
 });
+
+/* --- スワイプ切り替え機能 --- */
+let touchStartX = 0;
+let touchEndX = 0;
+
+const modalContent = document.querySelector('.book-layout');
+
+modalContent.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+modalContent.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+}, {passive: true});
+
+function handleSwipe() {
+    const swipeDistance = touchEndX - touchStartX;
+    const threshold = 50; // 50px以上動かしたらスワイプとみなす
+
+    if (swipeDistance > threshold) {
+        // 右にスワイプ ＝ 前のアイテムへ
+        changeModalItem(-1);
+    } else if (swipeDistance < -threshold) {
+        // 左にスワイプ ＝ 次のアイテムへ
+        changeModalItem(1);
+    }
+}
