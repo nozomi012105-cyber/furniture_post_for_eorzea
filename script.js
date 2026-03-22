@@ -181,18 +181,18 @@ async function openModalByIdx(originalIdx) {
     thumbNav.innerHTML = '';
     thumbNav.style.display = 'none';
 
-    const suffixList = ['front', 'side', 'back', 'bottom', 'top', 'dye', 'night'];
-    let foundCount = 0;
-    const isMobile = window.innerWidth <= 768; // スマホ判定
-
-    // 既存のドットがあれば削除
+    // 1. 既存のドットやナビを掃除（二重表示防止）
     const oldDots = document.getElementById('modalDots');
     if (oldDots) oldDots.remove();
     
-    // ドット用コンテナを作成
+    // 2. ドット用コンテナ作成
     const dotContainer = document.createElement('div');
     dotContainer.id = 'modalDots';
-    
+
+    const suffixList = ['front', 'side', 'back', 'bottom', 'top', 'dye', 'night'];
+    let foundCount = 0;
+    const isMobile = window.innerWidth <= 768;
+
     for (const suffix of suffixList) {
         const imgUrl = `images/${itemId}_${suffix}.webp`;
         const exists = await new Promise(res => {
@@ -214,21 +214,18 @@ async function openModalByIdx(originalIdx) {
                 document.getElementById('mainModalImg').src = imgUrl;
                 document.querySelectorAll('.thumb-nav img').forEach(el => el.classList.remove('active'));
                 tImg.classList.add('active');
-                // ドットを同期
                 updateDots(foundCount, currentIdx);
             };
             thumbNav.appendChild(tImg);
         }
     }
-
-    if (foundCount > 1) {
-        bookRight.classList.add('has-multiple-thumbs');
-        thumbNav.style.display = 'flex';
-    }
-
-    //ドット更新関数
+    // ドット更新関数
     function updateDots(total, current) {
-        if (total <= 1) return;
+        if (total <= 1) {
+            dotContainer.style.display = 'none';
+            return;
+        }
+        dotContainer.style.display = 'flex';
         let dotsHtml = '';
         for (let i = 0; i < total; i++) {
             const icon = (i === current) ? 'fiber_manual_record' : 'circle';
@@ -238,17 +235,32 @@ async function openModalByIdx(originalIdx) {
     }
 
 // デバイスごとの表示切り替え
+    const prevBtn = document.querySelector('.nav-prev');
+    const nextBtn = document.querySelector('.nav-next');
+
     if (foundCount > 1) {
         if (isMobile) {
-            thumbNav.style.display = 'none';   // スマホはサムネイルを隠す
-            // 画像エリア（modalPhoto）の直後にドットを挿入
+            // 【スマホ】サムネイルを隠し、ドットと半円ボタンを表示
+            thumbNav.style.display = 'none';
             document.getElementById('modalPhoto').after(dotContainer);
             updateDots(foundCount, 0);
+
+            if (prevBtn) prevBtn.classList.add('semi-circle');
+            if (nextBtn) nextBtn.classList.add('semi-circle');
         } else {
-            thumbNav.style.display = 'flex';   // PCはサムネイルを表示
+            // 【PC】サムネイルを表示し、ドットと半円ボタンを隠す
+            thumbNav.style.display = 'flex';
+            dotContainer.style.display = 'none';
+
+            if (prevBtn) prevBtn.classList.remove('semi-circle');
+            if (nextBtn) nextBtn.classList.remove('semi-circle');
         }
     } else {
+        // 画像が1枚以下の場合はすべて非表示
         thumbNav.style.display = 'none';
+        dotContainer.style.display = 'none';
+        if (prevBtn) prevBtn.classList.remove('semi-circle');
+        if (nextBtn) nextBtn.classList.remove('semi-circle');
     }
 
     document.getElementById('itemModal').classList.add('visible');
