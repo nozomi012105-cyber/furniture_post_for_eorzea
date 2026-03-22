@@ -228,14 +228,19 @@ async function openModalByIdx(originalIdx) {
     dotContainer.style.display = 'flex';
     let dotsHtml = '';
     for (let i = 0; i < total; i++) {
-        // 現在のページ：塗りつぶし(circle) / それ以外：枠線のみ(panorama_fish_eye など)
-        // もしくは、両方塗りつぶし(circle)にして、色の濃淡で分けるのがAmazon風です
         const isCurrent = (i === current);
-        const icon = 'circle'; // どちらも丸にする
-        const color = isCurrent ? 'var(--primary-color)' : '#e0e0e0'; // 現在地は濃く、他は薄いグレー
-        const size = isCurrent ? '10px' : '8px'; // 現在地を少しだけ大きくするとより親切です
+        
+        // 現在地なら塗りつぶし丸、それ以外は白抜き丸
+        const icon = isCurrent ? 'circle' : 'panorama_fish_eye';
+        
+        // 現在地は濃い色（またはメインカラー）、他は少し薄めのグレー
+        const color = isCurrent ? 'var(--primary-color)' : '#999';
+        const size = '10px'; // 粒の大きさ
 
-        dotsHtml += `<span class="material-symbols-rounded" style="font-size:${size}; margin:0 4px; color:${color}; transition: all 0.2s;">${icon}</span>`;
+        dotsHtml += `<span class="material-symbols-rounded" 
+            style="font-size:${size}; margin:0 4px; color:${color}; transition: all 0.2s;">
+            ${icon}
+        </span>`;
     }
     dotContainer.innerHTML = dotsHtml;
 }
