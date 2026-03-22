@@ -922,3 +922,42 @@ h1 {
         border-radius: 50%;
     }
 }
+
+@media (max-width: 768px) {
+    /* 半円ボタンの共通設定 */
+    .modal-nav.semi-circle {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 30px !important;  /* 幅を少し狭く */
+        height: 60px !important; /* 高さを出して縦長に */
+        background: rgba(125, 107, 93, 0.6) !important; /* var(--primary-color) の透明版 */
+        color: #fff !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        z-index: 7000 !important;
+        transition: opacity 0.3s;
+    }
+    /* 左側のボタン（右側が盛り上がっている半円） */
+    .nav-prev.semi-circle {
+        left: 0 !important;
+        border-radius: 0 40px 40px 0 !important; /* 右側だけ丸める */
+        padding-right: 5px;
+    }
+    /* 右側のボタン（左側が盛り上がっている半円） */
+    .nav-next.semi-circle {
+        right: 0 !important;
+        border-radius: 40px 0 0 40px !important; /* 左側だけ丸める */
+        padding-left: 5px;
+    }
+    /* アイコンのサイズ調整 */
+    .modal-nav.semi-circle span {
+        font-size: 20px !important;
+    }
+    /* 画像に被っても邪魔にならないよう、少し透かす */
+    .modal-nav.semi-circle:active {
+        background: rgba(125, 107, 93, 0.9) !important;
+    }
+}
