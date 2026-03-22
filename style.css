@@ -796,10 +796,24 @@ h1 {
 }
 
 /* ============================================================
-   スマホ・タブレット用 (768px以下) 最終調整
+   PC・スマホ両対応：表示切り替え ＆ デザイン最終調整
    ============================================================ */
+
+/* --- 1. PC版 (769px以上) の調整 --- */
+@media (min-width: 769px) {
+    /* PCではサイドバー内の閉じボタン（ヘッダーごと）を完全に消す */
+    .sidebar-mobile-header, #menu-close {
+        display: none !important;
+    }
+    /* PCではAmazon風ドットを隠す */
+    #modalDots {
+        display: none !important;
+    }
+}
+
+/* --- 2. スマホ・タブレット用 (768px以下) 最終確定版 --- */
 @media (max-width: 768px) {
-    /* --- 1. 全体 & サイドバー挙動 --- */
+    /* 全体・サイドバー挙動 */
     body { display: block !important; }
     #main-content { margin-left: 0 !important; width: 100% !important; padding-top: 70px !important; }
     
@@ -808,92 +822,98 @@ h1 {
         position: fixed !important; top: 0; left: -260px !important;
         width: 260px !important; height: 100vh !important;
         z-index: 5000 !important; transition: transform 0.3s ease !important;
-        display: block !important; /* ←【修正】ここをblockに */
+        display: block !important;
     }
     #sidebar.active { transform: translateX(260px) !important; }
     
-    /* サイドバーの背景暗転 */
     #sidebar-overlay.active {
         display: block !important;
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0, 0, 0, 0.5); z-index: 4000;
     }
 
-    /* サイドバー内の閉じボタン（バツ印を消してデザイン復元） */
+    /* サイドバーの閉じボタン(×)をスタイリッシュに */
     .sidebar-mobile-header {
         display: flex !important;
         justify-content: flex-end; /* 右寄せ */
-        padding: 10px;
+        padding: 15px;
     }
     #menu-close {
         display: block !important;
-        background: none !important;
-        border: none !important;
-        color: var(--primary-color);
-        font-size: 1.8rem;
+        background: none !important; /* 武骨な背景を解除 */
+        border: none !important;     /* 枠線を解除 */
+        color: var(--primary-color) !important;
+        font-size: 2.2rem !important; /* 押しやすく大きく */
+        line-height: 1;
         cursor: pointer;
+        padding: 0;
+        font-family: sans-serif;
     }
+    #menu-close:focus { outline: none; }
 
-    /* --- 2. カタロググリッド (2列表示の復活) --- */
+    /* カタログ2列表示 */
     #grid {
-        display: grid !important; /* ←【修正】gridを強制 */
-        grid-template-columns: repeat(2, 1fr) !important; /* ← 2列固定 */
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 12px !important;
         padding: 10px !important;
-        width: 100% !important;
     }
 
-    /* --- 3. モーダル本体 (book-layout) 縦並び & スクロール --- */
+    /* モーダル：縦並び ＆ 重なり防止 */
     .book-layout {
         flex-direction: column !important; 
         height: 85vh !important;
         width: 95vw !important;
         overflow: hidden !important;
         display: flex !important;
-        position: relative !important;
     }
 
-    /* 画像エリア (上) */
+    /* 画像エリア ＆ サムネイル非表示（ドットに切り替え） */
     .book-right {
         width: 100% !important;
-        height: 250px !important; 
+        height: auto !important;
         flex: 0 0 auto !important;
         border-right: none !important;
-        border-bottom: 1px solid rgba(0,0,0,0.1) !important;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
+        background: #fff !important;
+        padding-bottom: 0 !important;
+    }
+    .thumb-nav {
+        display: none !important; /* スマホではサムネイルを消す */
     }
 
-    /* テキストエリア (下・確定済みスクロール設定) */
+    /* Amazon風ドット（インジケーター） */
+    #modalDots {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 0;
+        background: #fff;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* テキストエリア（スクロール可能） */
     .book-left {
         width: 100% !important;
         flex: 1 1 auto !important; 
         overflow-y: auto !important; 
-        padding: 20px !important;
-        display: block !important;
+        padding: 15px 20px !important;
         background: var(--bg-color) !important;
     }
 
-    /* --- 4. 左右切り替えボタン (位置を画面左右に固定) --- */
+    /* 左右切り替えボタン ＆ モーダル閉じボタン */
     .modal-nav {
         position: absolute !important;
-        top: 125px !important; /* 画像エリアの中央 */
+        top: 380px !important;
         width: 44px !important;
         height: 44px !important;
         background: rgba(255, 255, 255, 0.8) !important;
         border-radius: 50% !important;
         z-index: 6000 !important;
         display: flex !important;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .nav-prev { left: 10px !important; }
     .nav-next { right: 10px !important; }
 
-    /* 閉じボタン (×) */
     .close-modal {
         top: 10px !important;
         right: 10px !important;
@@ -901,9 +921,4 @@ h1 {
         background: rgba(255, 255, 255, 0.6) !important;
         border-radius: 50%;
     }
-}
-
-/* PC版 (769px以上) で不要な要素を隠す */
-@media (min-width: 769px) {
-    #menu-toggle, #sidebar-overlay, .sidebar-mobile-header { display: none !important; }
 }
