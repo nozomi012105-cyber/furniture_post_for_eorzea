@@ -212,6 +212,25 @@ async function openModalByIdx(originalIdx) {
     }
 
     document.getElementById('itemModal').classList.add('visible');
+
+// モーダルを開く処理の中に追記イメージ
+    function updateModalDots(total, current) {
+    const dotContainer = document.getElementById('modalDots') || document.createElement('div');
+        dotContainer.id = 'modalDots';
+        dotContainer.style.textAlign = 'center';
+        dotContainer.style.marginTop = '10px';
+
+    let dotsHtml = '';
+    for (let i = 0; i < total; i++) {
+        const icon = (i === current) ? 'fiber_manual_record' : 'circle';
+        dotsHtml += `<span class="material-symbols-rounded" style="font-size:12px; margin:0 3px; color:${i === current ? 'var(--primary-color)' : '#ccc'}">${icon}</span>`;
+    }
+        dotContainer.innerHTML = dotsHtml;
+    
+    // 画像エリアのすぐ下に挿入
+    const photoArea = document.querySelector('.book-right');
+    if (!document.getElementById('modalDots')) photoArea.appendChild(dotContainer);
+    }
 }
 
 function changeModalItem(dir) {
@@ -474,3 +493,23 @@ fetch('https://script.google.com/macros/s/AKfycbwQxlFPFKuE2zYda8BBdt0hPyfrqlUzI2
     .catch(e => {
         console.error("データ取得エラー:", e);
     });
+
+// サイドバーの開閉を切り替える
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
+// カテゴリーなどを選んだら自動で閉じる（スマホ時のみ）
+document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    // 「スマホ画面」かつ「サイドバーが開いている」かつ「クリックされたのがサイドバー内のボタン」なら閉じる
+    if (window.innerWidth <= 768 && 
+        sidebar.classList.contains('active') && 
+        e.target.closest('.nav-item, .nav-item-parent, .sub-item')) {
+        toggleSidebar();
+    }
+});
