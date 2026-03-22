@@ -230,16 +230,16 @@ async function openModalByIdx(originalIdx) {
     for (let i = 0; i < total; i++) {
         const isCurrent = (i === current);
         
-        // 現在地なら塗りつぶし丸、それ以外は白抜き丸
-        const icon = isCurrent ? 'circle' : 'panorama_fish_eye';
-        
-        // 現在地は濃い色（またはメインカラー）、他は少し薄めのグレー
+        // 現在地だけ「FILL: 1」で塗りつぶし、他は「FILL: 0」で白抜きにする
+        const fillValue = isCurrent ? 1 : 0;
         const color = isCurrent ? 'var(--primary-color)' : '#999';
-        const size = '10px'; // 粒の大きさ
+        const opacity = isCurrent ? '1' : '0.5';
 
         dotsHtml += `<span class="material-symbols-rounded" 
-            style="font-size:${size}; margin:0 4px; color:${color}; transition: all 0.2s;">
-            ${icon}
+            style="font-size:10px; margin:0 4px; color:${color}; opacity:${opacity};
+            font-variation-settings: 'FILL' ${fillValue}, 'wght' 400, 'GRAD' 0, 'opsz' 24; 
+            transition: all 0.2s ease;">
+            circle
         </span>`;
     }
     dotContainer.innerHTML = dotsHtml;
